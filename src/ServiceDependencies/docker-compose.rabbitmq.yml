@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  rabbitmq-service:
+    image: rabbitmq:3-management
+    hostname: rabbitmq-service
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbituser
+      RABBITMQ_DEFAULT_PASS: rabbitpassword
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true

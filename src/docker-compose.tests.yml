@@ -1,0 +1,19 @@
+version: '3'
+
+services:  
+  saferebus-tests:
+    image: saferebus.tests
+    container_name: saferebus-tests
+    env_file:
+      - test.env
+    build:
+      context: .
+      dockerfile: Dockerfile_Test
+      args:
+        - TEST_FOLDER=SafeRebus/Tests
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true

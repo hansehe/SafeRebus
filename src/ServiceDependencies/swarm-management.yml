@@ -1,0 +1,13 @@
+networks: 
+    backend_network: false
+
+volumes:
+    portainer_data:
+
+stacks:
+    postgres_db: docker-compose.db.postgres.yml
+    rabbitmq-service: docker-compose.rabbitmq.yml
+    portainer: docker-compose.portainer.yml
+
+env_files:
+    - environment.env

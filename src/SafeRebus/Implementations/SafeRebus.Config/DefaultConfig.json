@@ -1,0 +1,10 @@
+{
+  "rabbitMq": {
+    "timeoutMs": 5000,
+    "user": "rabbituser",
+    "password": "rabbitpassword",
+    "hostname": "localhost",
+    "inputQueue": "SafeRebus.InputQueue",
+    "outputQueue": "SafeRebus.InputQueue"
+  }
+}

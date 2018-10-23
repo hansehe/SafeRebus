@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  saferebus-service:
+    image: saferebus.service
+    hostname: saferebus-service
+    build:
+      context: .
+      dockerfile: SafeRebus/Services/SafeRebusBusService/Dockerfile
+    env_file:
+      - test.env
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true
