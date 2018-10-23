@@ -50,6 +50,7 @@ namespace SafeRebus.MessageProcessor
         {
             activator.Handle<SafeRebusRequest>(async (bus, message) => await MessageHandlerResolver.Handle(bus, message));
             activator.Handle<SafeRebusResponse>(async (bus, message) => await MessageHandlerResolver.Handle(bus, message));
+            activator.Handle<DummyRequest>(async (bus, message) => await MessageHandlerResolver.Handle(bus, message));
         }
         
         private void OptionConfiguration(OptionsConfigurer optionsConfigurer)

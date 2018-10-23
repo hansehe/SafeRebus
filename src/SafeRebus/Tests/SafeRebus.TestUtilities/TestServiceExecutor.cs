@@ -23,19 +23,9 @@ namespace SafeRebus.TestUtilities
         private static IServiceProvider GetServiceProvider()
         {
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebus()
-                .UseDefaultTestRebusConfiguration()
+                .ConfigureWithSafeRebus(GetOverrideConfig())
                 .BuildServiceProvider();
             return provider;
-        }
-        
-        private static IServiceCollection UseDefaultTestRebusConfiguration(this IServiceCollection serviceCollection)
-        {
-            return serviceCollection.AddScoped<IConfiguration>(serviceProvider => new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(Config.Config.GetConfigFilename)
-                .AddInMemoryCollection(GetOverrideConfig())
-                .Build());
         }
 
         private static Dictionary<string, string> GetOverrideConfig()

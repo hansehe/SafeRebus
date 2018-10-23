@@ -10,7 +10,6 @@ namespace SafeRebusBusService
         {
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebus()
-                .UseDefaultRebusConfiguration()
                 .BuildServiceProvider();
             
             using (var scope = provider.CreateScope())

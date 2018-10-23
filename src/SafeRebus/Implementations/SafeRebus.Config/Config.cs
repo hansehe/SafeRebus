@@ -6,13 +6,11 @@ namespace SafeRebus.Config
 {
     public static class Config
     {
-        private const string DefaultConfigFilename = "DefaultConfig.json";
-        private const string DefaultConfigDockerFilename = "DefaultConfig.Docker.json";
+        public const string DefaultConfigFilename = "DefaultConfig.json";
+        public const string DefaultConfigDockerFilename = "DefaultConfig.Docker.json";
         
-        private static bool InContainer => 
+        public static bool InContainer => 
             Environment.GetEnvironmentVariable("RUNNING_IN_CONTAINER") == "true";
-
-        public static string GetConfigFilename => InContainer ? DefaultConfigDockerFilename : DefaultConfigFilename;
         
         public static long GetRabbitMqTimeoutMs(this IConfiguration configuration)
         {

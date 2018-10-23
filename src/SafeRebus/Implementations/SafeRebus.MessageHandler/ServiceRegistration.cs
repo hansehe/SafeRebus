@@ -12,7 +12,8 @@ namespace SafeRebus.MessageHandler
             return serviceCollection
                 .AddScoped<IMessageHandlerResolver, MessageHandlerResolver>()
                 .AddScoped<IMessageHandler, SafeRebusRequestMessageHandler>()
-                .AddScoped<IMessageHandler, SafeRebusResponseMessageHandler>();
+                .AddScoped<IMessageHandler, SafeRebusResponseMessageHandler>()
+                .AddScoped<IMessageHandler, DummyRequestMessageHandler>();
         }
     }
 }

@@ -1,9 +1,8 @@
 version: '3.4'
 
 services:
-  saferebus-service:
+  saferebus-service-1: &saferebus-service
     image: saferebus.service
-    hostname: saferebus-service
     build:
       context: .
       dockerfile: SafeRebus/Services/SafeRebusBusService/Dockerfile
@@ -11,6 +10,11 @@ services:
       - test.env
     networks:
       - backend_network
+
+  saferebus-service-2:
+    <<: *saferebus-service
+    environment:
+      - SPAM_DUMMY_REQUESTS=true
 
 networks:
   backend_network:

@@ -14,6 +14,9 @@ namespace SafeRebus.Runner
         private const long PauseBetweenRequestsMs = 500;
         private const int RequestsPerCycle = 10;
         
+        public static bool SendDummyRequests => 
+            Environment.GetEnvironmentVariable("SPAM_DUMMY_REQUESTS") == "true";
+        
         private readonly IBus Bus;
 
         public SafeRebusRunner(
@@ -24,13 +27,26 @@ namespace SafeRebus.Runner
 
         public async Task Run()
         {
+            if (SendDummyRequests)
+            {
+                Task.Run(SpamWithDummyRequests);
+            }
             while (true)
             {
                 for (var i = 0; i < RequestsPerCycle; i++)
                 {
                     await SendRequest();
                 }
-                Thread.Sleep(TimeSpan.FromMilliseconds(PauseBetweenRequestsMs));
+                await Task.Delay(TimeSpan.FromMilliseconds(PauseBetweenRequestsMs));
+            }
+        }
+
+        private async Task SpamWithDummyRequests()
+        {
+            while (true)
+            {
+                var request = new DummyRequest();
+                await Bus.Send(request);
             }
         }
 
