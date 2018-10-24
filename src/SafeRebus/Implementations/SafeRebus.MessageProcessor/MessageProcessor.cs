@@ -6,23 +6,24 @@ using Rebus.Routing.TypeBased;
 using SafeRebus.Abstractions;
 using SafeRebus.Contracts.Requests;
 using SafeRebus.Contracts.Responses;
+using SafeRebus.RebusSteps;
 
 namespace SafeRebus.MessageProcessor
 {
     public class MessageProcessor : IMessageProcessor
     {
         private readonly IMessageHandlerResolver MessageHandlerResolver;
-        
         private readonly IRabbitMqUtility RabbitMqUtility;
-        
         private readonly IServiceProvider ServiceProvider;
         
         public MessageProcessor(
             IMessageHandlerResolver messageHandlerResolver,
-            IRabbitMqUtility rabbitMqUtility)
+            IRabbitMqUtility rabbitMqUtility,
+            IServiceProvider serviceProvider)
         {
             MessageHandlerResolver = messageHandlerResolver;
             RabbitMqUtility = rabbitMqUtility;
+            ServiceProvider = serviceProvider;
         }
         
         public IBus Init()
@@ -53,8 +54,9 @@ namespace SafeRebus.MessageProcessor
             activator.Handle<DummyRequest>(async (bus, message) => await MessageHandlerResolver.Handle(bus, message));
         }
         
-        private void OptionConfiguration(OptionsConfigurer optionsConfigurer)
+        private void OptionConfiguration(OptionsConfigurer configurer)
         {
+            configurer.HandleSafeRebusSteps(ServiceProvider);
         }
     }
 }

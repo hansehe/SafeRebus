@@ -5,7 +5,7 @@ services:
     image: saferebus.service
     build:
       context: .
-      dockerfile: SafeRebus/Services/SafeRebusBusService/Dockerfile
+      dockerfile: SafeRebus/Services/SafeRebus.Service/Dockerfile
     env_file:
       - test.env
     networks:

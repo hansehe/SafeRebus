@@ -6,7 +6,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
-      <ProjectReference Include="..\SafeRebus.Database\SafeRebus.Database.csproj" />
     </ItemGroup>
 
 </Project>

@@ -13,4 +13,10 @@
       <ProjectReference Include="..\..\Implementations\SafeRebus.Builder\SafeRebus.Builder.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="xunit.runner.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+  </ItemGroup>
+
 </Project>

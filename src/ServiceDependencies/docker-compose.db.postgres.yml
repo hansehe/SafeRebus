@@ -27,8 +27,8 @@ services:
         constraints:
           - node.role == manager
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: saferebus
+      POSTGRES_USER: saferebus
       PGDATA: /var/lib/postgresql/data/labdata
     ports:
       - 5433:5432

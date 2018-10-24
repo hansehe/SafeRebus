@@ -20,10 +20,20 @@ namespace SafeRebus.TestUtilities
             }
         }
         
-        private static IServiceProvider GetServiceProvider()
+        public static IServiceProvider GetServiceProvider()
+        {
+            var overrideConfig = GetOverrideConfig();
+            overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
+            var provider = new ServiceCollection()
+                .ConfigureWithSafeRebus(overrideConfig)
+                .BuildServiceProvider();
+            return provider;
+        }
+        
+        public static IServiceProvider GetMigrationServiceProvider()
         {
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebus(GetOverrideConfig())
+                .ConfigureWithSafeRebusMigration(GetOverrideConfig())
                 .BuildServiceProvider();
             return provider;
         }
@@ -32,10 +42,12 @@ namespace SafeRebus.TestUtilities
         {
             var random = new Random();
             var randomQueue = $"SafeRebus.InputQueue_{random.Next().ToString()}";
+            var randomSchema = $"SafeRebus_{random.Next().ToString()}";
             var overrideDict = new Dictionary<string, string>
             {
                 {"rabbitMq:inputQueue", randomQueue},
-                {"rabbitMq:outputQueue", randomQueue}
+                {"rabbitMq:outputQueue", randomQueue},
+                {"database:schema", randomSchema}
             };
             return overrideDict;
         }

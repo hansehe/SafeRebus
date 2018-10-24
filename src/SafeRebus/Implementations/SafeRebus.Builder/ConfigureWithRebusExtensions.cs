@@ -13,17 +13,25 @@ namespace SafeRebus.Builder
             return serviceCollection
                 .ConfigureWith(MessageProcessor.ServiceRegistration.Register)
                 .ConfigureWith(MessageHandler.ServiceRegistration.Register)
+                .ConfigureWith(Database.ServiceRegistration.Register)
                 .ConfigureWith(Utilities.ServiceRegistration.Register)
                 .ConfigureWith(Runner.ServiceRegistration.Register)
+                .UseDefaultRebusConfiguration(overrideConfig);
+        }
+        
+        public static IServiceCollection ConfigureWithSafeRebusMigration(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
+        {
+            return serviceCollection
+                .ConfigureWith(Migration.ServiceRegistration.Register)
+                .ConfigureWith(Database.ServiceRegistration.Register)
                 .UseDefaultRebusConfiguration(overrideConfig);
         }
 
         private static IServiceCollection UseDefaultRebusConfiguration(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
             return serviceCollection.AddScoped<IConfiguration>(serviceProvider => new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(Config.Config.DefaultConfigFilename)
-                .AddJsonFileIfTrue(Config.Config.DefaultConfigDockerFilename, () => Config.Config.InContainer)
+                .AddJsonFile(Config.BaseConfig.DefaultConfigFilename)
+                .AddJsonFileIfTrue(Config.BaseConfig.DefaultConfigDockerFilename, () => Config.BaseConfig.InContainer)
                 .AddInMemoryIfTrue(overrideConfig, () => overrideConfig != null)
                 .Build());
         }

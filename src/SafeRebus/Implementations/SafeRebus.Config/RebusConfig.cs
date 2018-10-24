@@ -4,55 +4,57 @@ using Rebus.Logging;
 
 namespace SafeRebus.Config
 {
-    public static class Config
+    public static class RebusConfig
     {
-        public const string DefaultConfigFilename = "DefaultConfig.json";
-        public const string DefaultConfigDockerFilename = "DefaultConfig.Docker.json";
-        
-        public static bool InContainer => 
-            Environment.GetEnvironmentVariable("RUNNING_IN_CONTAINER") == "true";
+        private static long DefaultRabbitMqTimeoutMs = 5000;
+        private static string DefaultRabbitMqUser = "guest";
+        private static string DefaultRabbitMqPassword = "guest";
+        private static string DefaultRabbitMqHostname = "localhost";
+        private static LogLevel DefaultRabbitMqLogLevel = LogLevel.Info;
+        private static string DefaultRabbitMqInputQueue = "SafeRebus.InputQueue";
+        private static string DefaultRabbitMqOutputQueue = "SafeRebus.OutputQueue";
         
         public static long GetRabbitMqTimeoutMs(this IConfiguration configuration)
         {
             if (!long.TryParse(configuration["rabbitMq:timeoutMs"], out var timeoutMs))
             {
-                timeoutMs = DefaultConfig.DefaultRabbitMqTimeoutMs;
+                timeoutMs = DefaultRabbitMqTimeoutMs;
             }
             return timeoutMs;
         }
 
         public static string GetRabbitMqUser(this IConfiguration configuration)
         {
-            return configuration["rabbitMq:user"] ?? DefaultConfig.DefaultRabbitMqUser;
+            return configuration["rabbitMq:user"] ?? DefaultRabbitMqUser;
         }
         
         public static string GetRabbitMqPassword(this IConfiguration configuration)
         {
-            return configuration["rabbitMq:password"] ?? DefaultConfig.DefaultRabbitMqPassword;
+            return configuration["rabbitMq:password"] ?? DefaultRabbitMqPassword;
         }
         
         public static string GetRabbitMqHostname(this IConfiguration configuration)
         {
-            return configuration["rabbitMq:hostname"] ?? DefaultConfig.DefaultRabbitMqHostname;
+            return configuration["rabbitMq:hostname"] ?? DefaultRabbitMqHostname;
         }
         
         public static LogLevel GetRabbitMqLogLevel(this IConfiguration configuration)
         {
             if (!Enum.TryParse<LogLevel>(configuration["rabbitMq:logLevel"], out var logLevel))
             {
-                logLevel = DefaultConfig.DefaultRabbitMqLogLevel;
+                logLevel = DefaultRabbitMqLogLevel;
             }
             return logLevel;
         }
 
         public static string GetRabbitMqInputQueue(this IConfiguration configuration)
         {
-            return configuration["rabbitMq:inputQueue"] ?? DefaultConfig.DefaultRabbitMqInputQueue;
+            return configuration["rabbitMq:inputQueue"] ?? DefaultRabbitMqInputQueue;
         }
         
         public static string GetRabbitMqOutputQueue(this IConfiguration configuration)
         {
-            return configuration["rabbitMq:outputQueue"] ?? DefaultConfig.DefaultRabbitMqOutputQueue;
+            return configuration["rabbitMq:outputQueue"] ?? DefaultRabbitMqOutputQueue;
         }
     }
 }

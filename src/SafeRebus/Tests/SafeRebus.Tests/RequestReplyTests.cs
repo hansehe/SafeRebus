@@ -6,11 +6,14 @@ using SafeRebus.Abstractions;
 using SafeRebus.Contracts.Responses;
 using Xunit;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
+using SafeRebus.Config;
 using SafeRebus.MessageHandler.MessageHandlers;
 using SafeRebus.TestUtilities;
 
 namespace SafeRebus.Tests
 {
+    [Collection(TestCollectionFixtures.CollectionTag)]
     public class RequestReplyTests
     {
         [Fact]

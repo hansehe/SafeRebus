@@ -1,21 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Abstractions;
+﻿using FluentMigrator.Runner;
+using Microsoft.Extensions.DependencyInjection;
 using SafeRebus.Builder;
 
-namespace SafeRebusBusService
+namespace SafeRebus.Migrator
 {
     class Program
     {
         static void Main(string[] args)
         {
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebus()
+                .ConfigureWithSafeRebusMigration()
                 .BuildServiceProvider();
             
             using (var scope = provider.CreateScope())
             {
-                var runner = scope.ServiceProvider.GetService<IRebusRunner>();
-                runner.Run().Wait();
+                var runner = scope.ServiceProvider.GetService<IMigrationRunner>();
+                runner.MigrateUp();
             }
         }
     }

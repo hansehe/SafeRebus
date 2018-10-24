@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  saferebus-migrator:
+    image: saferebus.migrator
+    build:
+      context: .
+      dockerfile: SafeRebus/Services/SafeRebus.Migrator/Dockerfile
+    env_file:
+      - test.env
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true

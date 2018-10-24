@@ -6,13 +6,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
+      <ProjectReference Include="..\SafeRebus.Config\SafeRebus.Config.csproj" />
       <ProjectReference Include="..\SafeRebus.RebusSteps\SafeRebus.RebusSteps.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-        <HintPath>C:\Users\heh\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      </Reference>
+      <PackageReference Include="Dapper" Version="1.50.5" />
+      <PackageReference Include="Npgsql" Version="4.0.3" />
     </ItemGroup>
 
 </Project>

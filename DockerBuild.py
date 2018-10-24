@@ -17,18 +17,22 @@ AvailableCommands = [
 def BuildDocker(buildSelection):
     srcFolder = ['src', '..']
     miniSwarmManagementFile = 'swarm-management.yml'
+    migratorComposeFiles = [
+        'docker-compose.migrator.yml'
+    ]
     generalComposeFiles = [
         'docker-compose.yml'
     ]
 
     if buildSelection == 'run':
         os.chdir(srcFolder[0])
+        DockerComposeTools.DockerComposeUp(migratorComposeFiles)
         DockerComposeTools.DockerComposeUp(generalComposeFiles, False)
         os.chdir(srcFolder[1])
     
     elif buildSelection == 'build':
         os.chdir(srcFolder[0])
-        DockerComposeTools.DockerComposeBuild(generalComposeFiles)
+        DockerComposeTools.DockerComposeBuild(generalComposeFiles + migratorComposeFiles)
         os.chdir(srcFolder[1])
 
     elif buildSelection == 'test':

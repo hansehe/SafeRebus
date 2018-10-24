@@ -1,5 +1,9 @@
 {
   "rabbitMq": {
     "hostname": "rabbitmq-service"
+  },
+  "database": {
+    "hostname": "postgres-db",
+    "port": 5433
   }
 }

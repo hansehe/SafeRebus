@@ -5,6 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentMigrator" Version="3.1.3" />
+      <PackageReference Include="FluentMigrator.Runner" Version="3.1.3" />
+      <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.1.3" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
       <ProjectReference Include="..\SafeRebus.Database\SafeRebus.Database.csproj" />
     </ItemGroup>
