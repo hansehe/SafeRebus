@@ -4,5 +4,6 @@ namespace SafeRebus.Database
     {
         public const string Id = "id";
         public const string Timestamp = "timestamp";
+        public const string Response = "response";
     }
 }

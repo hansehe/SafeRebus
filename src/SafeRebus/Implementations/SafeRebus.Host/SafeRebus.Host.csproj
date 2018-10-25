@@ -11,6 +11,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
       <ProjectReference Include="..\SafeRebus.Config\SafeRebus.Config.csproj" />
+      <ProjectReference Include="..\SafeRebus.Utilities\SafeRebus.Utilities.csproj" />
     </ItemGroup>
 
 </Project>

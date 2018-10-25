@@ -2,98 +2,115 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Rebus.Bus;
+using SafeRebus.Abstractions;
 using SafeRebus.Config;
-using SafeRebus.Contracts;
 using SafeRebus.Contracts.Requests;
+using SafeRebus.Utilities;
 
 namespace SafeRebus.Host
 {
     public class SafeRebusHost : IHostedService
     {
-        private const long PauseBetweenRequestsMs = 500;
-        private const int RequestsPerCycle = 10;
-        private bool Cancel = false;
+        private CancellationToken CancellationToken;
         private IList<Task> RunningTasks = new List<Task>();
         
+        private long PauseBetweenRequestsMs => Configuration.GetHostPauseBetweenRequestsMs();
+        private int RequestsPerCycle => Configuration.GetHostRequestsPerCycle();
+
+        private readonly ILogger Logger;
         private readonly IBus Bus;
+        private readonly IConfiguration Configuration;
+        private readonly IResponseRepository ResponseRepository;
 
         public SafeRebusHost(
-            IBus bus)
+            ILogger<SafeRebusHost> logger,
+            IBus bus,
+            IConfiguration configuration,
+            IResponseRepository responseRepository)
         {
+            Logger = logger;
             Bus = bus;
+            Configuration = configuration;
+            ResponseRepository = responseRepository;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            CancellationToken = cancellationToken;
             var mainTask = Run();
             RunningTasks.Add(mainTask);
-            if (BaseConfig.SendDummyRequests)
+            if (Configuration.HostShouldSendDummyRequests())
             {
                 RunningTasks.Add(SpamWithDummyRequests());
             }
             return mainTask;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            Cancel = true;
+            Logger.LogInformation("Stopping host");
             foreach (var runningTask in RunningTasks)
             {
-                await runningTask;
+                runningTask.Wait(cancellationToken);
             }
+            return Task.CompletedTask;
         }
 
         private Task Run()
         {
-            return RunUntilCancelled(async () => 
+            Logger.LogInformation("Starting main host job - sending requests, and expects successful replies.");
+            Logger.LogInformation($"Sending {RequestsPerCycle} requests every {PauseBetweenRequestsMs} millisecond.");
+            return RunUntilCancelled(async () =>
             {
-                for (var i = 0; i < RequestsPerCycle; i++)
+                var requests = GetRequests(RequestsPerCycle);
+                foreach (var request in requests)
                 {
-                    await SendRequest();
-                }
-                await Task.Delay(TimeSpan.FromMilliseconds(PauseBetweenRequestsMs));   
+                    await Bus.Send(request);
+                } 
+                await Tools.WaitUntilSuccess(() => AssertReceivedResponses(requests));  
+                await Task.Delay(TimeSpan.FromMilliseconds(PauseBetweenRequestsMs));
             });
         }
 
         private Task SpamWithDummyRequests()
         {
+            Logger.LogInformation("Starting alternative job - spamming with dummy requests.");
             return RunUntilCancelled(async () => 
             {
                 var request = new DummyRequest();
-                await Bus.Send(request);    
+                await Bus.Send(request);
+                await Task.Delay(TimeSpan.FromMilliseconds(10));
             });
         }
 
         private async Task RunUntilCancelled(Func<Task> func)
         {
-            while (!Cancel)
+            while (!CancellationToken.IsCancellationRequested)
             {
                 await func.Invoke();
             }
         }
 
-        private async Task SendRequest()
+        private async Task AssertReceivedResponses(SafeRebusRequest[] requests)
         {
-            var request = GetRequest();
-            await Bus.Send(request);
-        }
-
-        private static SafeRebusRequest GetRequest()
-        {
-            return new SafeRebusRequest
+            foreach (var request in requests)
             {
-                RequestEnum = GetRandomRequestEnum()
-            };
+                await ResponseRepository.SelectResponse(request.Id);
+            }
         }
 
-        private static RequestEnum GetRandomRequestEnum()
+        private static SafeRebusRequest[] GetRequests(int nRequests)
         {
-            var random = new Random();
-            var enumValues = Enum.GetValues(typeof(RequestEnum));
-            var randomEnum = (RequestEnum)enumValues.GetValue(random.Next(enumValues.Length));
-            return randomEnum;
+            var requests = new List<SafeRebusRequest>();
+            for (var i = 0; i < nRequests; i++)
+            {
+                requests.Add(new SafeRebusRequest());
+            }
+            return requests.ToArray();
         }
     }
 }

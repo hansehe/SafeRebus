@@ -5,24 +5,25 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
+using SafeRebus.Contracts.Responses;
 
 namespace SafeRebus.Database.Select
 {
-    public static class SelectCorrelationIds
+    public static class SelectResponse
     {
-        private const string SqlTemplate = "SELECT id FROM {0}.{1} WHERE id = @id";
+        private const string SqlTemplate = "SELECT * FROM {0}.{1} WHERE id = @id";
         
-        public static Task<IEnumerable<Guid>> Select(
+        public static Task<SafeRebusResponse> Select(
             IDbConnection dbConnection,
             IConfiguration configuration,
-            Guid correlationId)
+            Guid id)
         {
             var @params = new DynamicParameters();
-            @params.Add(Columns.Id, correlationId);
+            @params.Add(Columns.Id, id);
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
-                Tables.OutboxTable);
-            return dbConnection.QueryAsync<Guid>(sql, @params);
+                Tables.ResponseTable);
+            return dbConnection.QuerySingleAsync<SafeRebusResponse>(sql, @params);
         }
     }
 }

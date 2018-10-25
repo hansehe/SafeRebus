@@ -4,14 +4,14 @@ namespace SafeRebus.Config
 {
     public static class DbConfig
     {
-        private static long DefaultDbTimeoutMs = 5000;
-        private static string DefaultDbUser = "admin";
-        private static string DefaultDbPassword = "admin";
-        private static string DefaultDbHostname = "localhost";
-        private static string DefaultDbPort = "5432";
-        private static string DefaultDbName = "postgres";
-        private static string DefaultDbPooling = "false";
-        private static string DefaultDbSchema = "saferebus";
+        private const long DefaultDbTimeoutMs = 5000;
+        private const string DefaultDbUser = "admin";
+        private const string DefaultDbPassword = "admin";
+        private const string DefaultDbHostname = "localhost";
+        private const string DefaultDbPort = "5432";
+        private const string DefaultDbName = "postgres";
+        private const string DefaultDbPooling = "false";
+        private const string DefaultDbSchema = "saferebus";
         
         public static long GetDbTimeoutMs(this IConfiguration configuration)
         {

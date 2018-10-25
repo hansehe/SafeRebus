@@ -28,10 +28,17 @@ namespace SafeRebus.TestUtilities
         
         public void Dispose()
         {
-            var provider = TestServiceExecutor.GetMigrationServiceProvider();
-            using (var scope = provider.CreateScope())
+            try
             {
-                DeleteTestSchema(scope);
+                var provider = TestServiceExecutor.GetMigrationServiceProvider();
+                using (var scope = provider.CreateScope())
+                {
+                    DeleteTestSchema(scope);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
         

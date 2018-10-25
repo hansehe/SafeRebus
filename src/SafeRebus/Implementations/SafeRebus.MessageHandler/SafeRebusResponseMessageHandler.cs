@@ -3,31 +3,35 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rebus.Handlers;
+using SafeRebus.Abstractions;
 using SafeRebus.Contracts.Responses;
+using SafeRebus.Utilities;
 
 namespace SafeRebus.MessageHandler
 {
     public class SafeRebusResponseMessageHandler : IHandleMessages<SafeRebusResponse>
     {
         private readonly ILogger Logger;
-        public static Dictionary<Guid, SafeRebusResponse> ReceivedResponses { get; } = new Dictionary<Guid, SafeRebusResponse>();
+        private readonly IResponseRepository ResponseRepository;
 
         public SafeRebusResponseMessageHandler(
-            ILogger<SafeRebusResponseMessageHandler> logger)
+            ILogger<SafeRebusResponseMessageHandler> logger,
+            IResponseRepository responseRepository)
         {
             Logger = logger;
+            ResponseRepository = responseRepository;
         }
         
         public Task Handle(SafeRebusResponse message)
         {
-            Logger.LogDebug($"Received {typeof(SafeRebusResponse)}");
-            HandleResponse(message);
-            return Task.CompletedTask;
+            Logger.LogDebug($"Received message: {typeof(SafeRebusResponse)}");
+            return HandleResponse(message);
         }
         
-        private static void HandleResponse(SafeRebusResponse response)
+        private async Task HandleResponse(SafeRebusResponse response)
         {
-            ReceivedResponses[response.Id] = response;
+            await ResponseRepository.InsertResponse(response);
+            Tools.MaybeThrowJokerException();
         }
     }
 }

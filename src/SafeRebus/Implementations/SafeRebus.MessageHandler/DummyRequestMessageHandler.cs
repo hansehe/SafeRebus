@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rebus.Handlers;
 using SafeRebus.Contracts.Requests;
+using SafeRebus.Utilities;
 
 namespace SafeRebus.MessageHandler
 {
@@ -17,14 +18,9 @@ namespace SafeRebus.MessageHandler
         
         public Task Handle(DummyRequest message)
         {
-            Logger.LogDebug($"Received {typeof(DummyRequest)}");
-            HandleRequest(message);
+            Logger.LogDebug($"Received message: {typeof(DummyRequest)}");
+            Tools.MaybeThrowJokerException();
             return Task.CompletedTask;
-        }
-
-        private static void HandleRequest(DummyRequest request)
-        {
-            
         }
     }
 }

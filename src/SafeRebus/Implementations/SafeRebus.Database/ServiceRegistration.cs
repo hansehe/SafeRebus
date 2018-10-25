@@ -11,7 +11,8 @@ namespace SafeRebus.Database
             return serviceCollection
                 .AddScoped<IDbExecutor, DbExecutor>()
                 .AddScoped<IDbProvider, DbProvider>()
-                .AddScoped<IOutboxRepository, OutboxRepository>();
+                .AddScoped<IOutboxRepository, OutboxRepository>()
+                .AddScoped<IResponseRepository, ResponseRepository>();
         }
     }
 }

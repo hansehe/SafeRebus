@@ -1,27 +1,59 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Rebus.Bus;
 using Xunit;
 using FluentAssertions;
-using SafeRebus.MessageHandler;
+using Microsoft.Extensions.Hosting;
+using SafeRebus.Abstractions;
+using SafeRebus.Contracts.Responses;
 using SafeRebus.TestUtilities;
+using SafeRebus.Utilities;
 
 namespace SafeRebus.Tests
 {
     [Collection(TestCollectionFixtures.CollectionTag)]
     public class RequestReplyTests
     {
+        private const long DurationOfAcidTestSec = 10;
+        
         [Fact]
-        public async Task AsyncRequestReply_Success()
+        public Task AsyncRequestReply_Success()
         {
-            var serviceProvider = TestServiceExecutor.GetServiceProvider();
-            var bus = serviceProvider.GetRequiredService<IBus>();
-            var request = TestTools.GetRequest();
-            await bus.Send(request);
-            await TestTools.WaitUntilSuccess(async () =>
+            return TestServiceExecutor.ExecuteInScope(async scope =>
+            {
+                var bus = scope.ServiceProvider.GetService<IBus>();
+                var repository = scope.ServiceProvider.GetService<IResponseRepository>();
+                var request = new SafeRebusResponse();
+                await bus.Send(request);
+                await Tools.WaitUntilSuccess(async () =>
                 {
-                    SafeRebusResponseMessageHandler.ReceivedResponses.Should().ContainKey(request.Id);
+                    (await repository.SelectResponse(request.Id)).Id.Should().Be(request.Id);
                 });
+            });
+        }
+        
+        [Fact]
+        public Task MultipleAsyncRequestRepliesWithJokerExceptions_AcidTest_Success()
+        {
+            return TestServiceExecutor.ExecuteInScope(async scope =>
+            {
+                var host = scope.ServiceProvider.GetService<IHostedService>();
+                var cancellationTokenSource = new CancellationTokenSource();
+                var hardCancellationTokenSource = new CancellationTokenSource();
+
+                var timeoutTask = Task.Run(async () =>
+                {
+                    var timeout = TimeSpan.FromSeconds(DurationOfAcidTestSec);
+                    await Task.Delay(timeout);
+                    cancellationTokenSource.Cancel();
+                    await host.StopAsync(hardCancellationTokenSource.Token);
+                });
+                
+                await host.StartAsync(cancellationTokenSource.Token);
+                await timeoutTask;
+            });
         }
     }
 }

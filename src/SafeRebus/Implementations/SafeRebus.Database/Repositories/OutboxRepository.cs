@@ -1,5 +1,6 @@
 using System;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -43,20 +44,23 @@ namespace SafeRebus.Database.Repositories
 
         public Task InsertMessageId(Guid id)
         {
+            Logger.LogDebug($"Inserting message id: {id.ToString()}");
             return DbExecutor.ExecuteInTransactionAsync(dbConnection =>
                 InsertCorrelationId.Execute(dbConnection, Configuration, id));
         }
 
         public async Task<bool> MessageIdExists(Guid id)
         {
+            Logger.LogDebug($"Checking if message id exists: {id.ToString()}");
             var savedIds = await DbExecutor.SelectInTransactionAsync(dbConnection =>
-                SelectCorrelationIds.Select(dbConnection, Configuration, id));
+                SelectMessageIds.Select(dbConnection, Configuration, id));
             return savedIds.Any(savedId => savedId == id);
         }
 
         public Task CleanOldMessageIds(TimeSpan tooOldThreshold)
         {
             var dateTimeThreshold = DateTime.UtcNow - tooOldThreshold;
+            Logger.LogDebug($"Deleting all old message ids before datetime: {dateTimeThreshold.ToString(CultureInfo.InvariantCulture)}");
             return DbExecutor.ExecuteInTransactionAsync(dbConnection =>
                 DeleteCorrelationIdsFromTimestamp.Delete(dbConnection, Configuration, dateTimeThreshold));
         }

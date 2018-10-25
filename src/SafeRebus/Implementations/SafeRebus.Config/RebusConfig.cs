@@ -6,13 +6,13 @@ namespace SafeRebus.Config
 {
     public static class RebusConfig
     {
-        private static long DefaultRabbitMqTimeoutMs = 5000;
-        private static string DefaultRabbitMqUser = "guest";
-        private static string DefaultRabbitMqPassword = "guest";
-        private static string DefaultRabbitMqHostname = "localhost";
-        private static LogLevel DefaultRabbitMqLogLevel = LogLevel.Info;
-        private static string DefaultRabbitMqInputQueue = "SafeRebus.InputQueue";
-        private static string DefaultRabbitMqOutputQueue = "SafeRebus.OutputQueue";
+        private const long DefaultRabbitMqTimeoutMs = 5000;
+        private const string DefaultRabbitMqUser = "guest";
+        private const string DefaultRabbitMqPassword = "guest";
+        private const string DefaultRabbitMqHostname = "localhost";
+        private const LogLevel DefaultRabbitMqLogLevel = LogLevel.Info;
+        private const string DefaultRabbitMqInputQueue = "SafeRebus.InputQueue";
+        private const string DefaultRabbitMqOutputQueue = "SafeRebus.OutputQueue";
         
         public static long GetRabbitMqTimeoutMs(this IConfiguration configuration)
         {

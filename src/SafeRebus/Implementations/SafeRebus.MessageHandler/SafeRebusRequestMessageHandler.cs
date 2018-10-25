@@ -6,6 +6,7 @@ using Rebus.Handlers;
 using SafeRebus.Contracts;
 using SafeRebus.Contracts.Requests;
 using SafeRebus.Contracts.Responses;
+using SafeRebus.Utilities;
 
 namespace SafeRebus.MessageHandler
 {
@@ -24,8 +25,9 @@ namespace SafeRebus.MessageHandler
 
         public Task Handle(SafeRebusRequest message)
         {
-            Logger.LogDebug($"Received {typeof(SafeRebusRequest)}");
+            Logger.LogDebug($"Received message: {typeof(SafeRebusRequest)}");
             var response = HandleRequest(message);
+            Tools.MaybeThrowJokerException();
             return Bus.Reply(response);
         }
 
@@ -34,25 +36,15 @@ namespace SafeRebus.MessageHandler
             var response = new SafeRebusResponse
             {
                 Id = request.Id,
-                RequestEnum = request.RequestEnum,
-                Response = ResolveEnumResponse(request.RequestEnum)
+                Response = GetRandomResponse()
             };
             return response;
         }
 
-        private static string ResolveEnumResponse(RequestEnum requestEnum)
+        private static string GetRandomResponse()
         {
-            switch (requestEnum)
-            {
-                case RequestEnum.GiveMeYo:
-                    return "Yo!";
-                case RequestEnum.GiveMeHello:
-                    return "Hello World!";
-                case RequestEnum.GiveMeATotallyRandomSlogan:
-                    return "This should be a totally random slogan..";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var random = new Random();
+            return $"This should be a totally random slogan.., soo here is a random number {random.Next()}";
         }
     }
 }

@@ -8,6 +8,11 @@
       "IncludeScopes": true
     }
   },
+  "host": {
+    "pauseBetweenRequestsMs": 1000,
+    "requestsPerCycle": 2,
+    "sendDummyRequests": false
+  },
   "rabbitMq": {
     "timeoutMs": 5000,
     "user": "rabbituser",
@@ -23,6 +28,6 @@
     "hostname": "localhost",
     "port": 5433,
     "databaseName": "saferebus",
-    "pooling": false
+    "pooling": true
   }
 }

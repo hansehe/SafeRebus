@@ -4,6 +4,6 @@ namespace SafeRebus.Contracts.Responses
 {
     public class SafeRebusResponse : SafeRebusRequest
     {
-        public string Response { get; set; }
+        public string Response { get; set; } = "Some random response";
     }
 }

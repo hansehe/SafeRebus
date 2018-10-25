@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using SafeRebus.Abstractions;
@@ -39,7 +38,7 @@ namespace SafeRebus.TestUtilities
         
         public static IServiceProvider GetServiceProvider()
         {
-            var overrideConfig = GetOverrideConfig();
+            var overrideConfig = OverrideConfig.GetOverrideConfig();
             overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebus(overrideConfig)
@@ -50,23 +49,9 @@ namespace SafeRebus.TestUtilities
         public static IServiceProvider GetMigrationServiceProvider()
         {
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebusMigration(GetOverrideConfig())
+                .ConfigureWithSafeRebusMigration(OverrideConfig.GetOverrideConfig())
                 .BuildServiceProvider();
             return provider;
-        }
-
-        private static Dictionary<string, string> GetOverrideConfig()
-        {
-            var random = new Random();
-            var randomQueue = $"SafeRebus.InputQueue_{random.Next().ToString()}";
-            var randomSchema = $"SafeRebus_{random.Next().ToString()}";
-            var overrideDict = new Dictionary<string, string>
-            {
-                {"rabbitMq:inputQueue", randomQueue},
-                {"rabbitMq:outputQueue", randomQueue},
-                {"database:schema", randomSchema}
-            };
-            return overrideDict;
         }
     }
 }
