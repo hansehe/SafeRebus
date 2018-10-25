@@ -23,12 +23,12 @@ namespace SafeRebus.MessageHandler
             Bus = bus;
         }
 
-        public Task Handle(SafeRebusRequest message)
+        public async Task Handle(SafeRebusRequest message)
         {
             Logger.LogDebug($"Received message: {typeof(SafeRebusRequest)}");
             var response = HandleRequest(message);
+            await Bus.Reply(response);
             Tools.MaybeThrowJokerException();
-            return Bus.Reply(response);
         }
 
         private static SafeRebusResponse HandleRequest(SafeRebusRequest request)

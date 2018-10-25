@@ -35,6 +35,7 @@ namespace SafeRebus.RebusSteps.IncomingSteps
                         dbProvider.GetDbTransaction().Rollback();
                         throw;
                     }
+                    dbProvider.GetDbTransaction().Commit();
                 }
             }
         }

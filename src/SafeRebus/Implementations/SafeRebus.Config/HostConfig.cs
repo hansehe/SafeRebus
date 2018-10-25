@@ -5,21 +5,11 @@ namespace SafeRebus.Config
 {
     public static class HostConfig
     {
-        private const long DefaultPauseBetweenRequestsMs = 1000;
         private const int DefaultRequestsPerCycle = 10;
         private const bool DefaultShouldSendDummyRequests = false;
         
         private static bool OverrideSendDummyRequests => 
             Environment.GetEnvironmentVariable("SPAM_WITH_DUMMY_REQUESTS") == "true";
-        
-        public static long GetHostPauseBetweenRequestsMs(this IConfiguration configuration)
-        {
-            if (!long.TryParse(configuration["host:pauseBetweenRequestsMs"], out var ms))
-            {
-                ms = DefaultPauseBetweenRequestsMs;
-            }
-            return ms;
-        }
         
         public static int GetHostRequestsPerCycle(this IConfiguration configuration)
         {

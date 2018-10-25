@@ -16,13 +16,11 @@ namespace SafeRebus.TestUtilities
                 {"rabbitMq:inputQueue", randomQueue},
                 {"rabbitMq:outputQueue", randomQueue},
                 {"database:schema", randomSchema},
-                {"database:pooling", true.ToString()},
-                {"host:sendDummyRequests", false.ToString()},
-                {"host:pauseBetweenRequestsMs", 500.ToString()},
-                {"host:requestsPerCycle", 10.ToString()},
+                {"host:sendDummyRequests", true.ToString()},
+                {"host:requestsPerCycle", 100.ToString()},
             };
 
-            BaseConfig.DropJokerExceptions = false;
+            BaseConfig.UseJokerExceptions = true;
             
             return overrideDict;
         }

@@ -24,10 +24,14 @@ namespace SafeRebus.Utilities
 
         public void WaitForAvailableRabbitMq()
         {
-            var connectionFactory = new ConnectionFactory();
-            connectionFactory.Uri = new Uri(ConnectionString);
             var timeout = TimeSpan.FromMilliseconds(Configuration.GetRabbitMqTimeoutMs());
-            WaitForAvailableRabbitMq(timeout, connectionFactory);
+            WaitForAvailableRabbitMq(timeout, GetConnectionFactory());
+        }
+        
+        public void PurgeInputQueue()
+        {
+            var purgedMessages = PurgeQueue(GetConnectionFactory(), InputQueue);
+            Logger.LogInformation($"Purged input queue {InputQueue} with {purgedMessages} hanging messages.");
         }
 
         public string ConnectionString => BuildConnectionString(Configuration);
@@ -38,6 +42,14 @@ namespace SafeRebus.Utilities
 
         public LogLevel LogLevel => Configuration.GetRabbitMqLogLevel();
 
+        private IConnectionFactory GetConnectionFactory()
+        {
+            var connectionFactory = new ConnectionFactory
+            {
+                Uri = new Uri(ConnectionString)
+            };
+            return connectionFactory;
+        }
 
         private static string BuildConnectionString(IConfiguration configuration)
         {
@@ -81,6 +93,24 @@ namespace SafeRebus.Utilities
             {
                 return false;
             }
+        }
+        
+        private static uint PurgeQueue(IConnectionFactory connectionFactory, string queue)
+        {
+            using (var conn = connectionFactory.CreateConnection())
+            using (var model = conn.CreateModel())
+            {
+                try
+                {
+                    var purgedMessages = model.QueuePurge(queue);
+                    return purgedMessages;
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            return 0;
         }
     }
 }

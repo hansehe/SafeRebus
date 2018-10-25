@@ -1,9 +1,7 @@
-using System;
-
 namespace SafeRebus.Contracts.Requests
 {
     public class DummyRequest
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public bool ImDummy { get; set; } = true;
     }
 }

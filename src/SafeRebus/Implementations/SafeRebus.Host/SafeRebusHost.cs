@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -16,9 +18,9 @@ namespace SafeRebus.Host
     public class SafeRebusHost : IHostedService
     {
         private CancellationToken CancellationToken;
+        private bool ErrorStop = false;
         private IList<Task> RunningTasks = new List<Task>();
         
-        private long PauseBetweenRequestsMs => Configuration.GetHostPauseBetweenRequestsMs();
         private int RequestsPerCycle => Configuration.GetHostRequestsPerCycle();
 
         private readonly ILogger Logger;
@@ -40,20 +42,23 @@ namespace SafeRebus.Host
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            Logger.LogInformation("Starting host");
             CancellationToken = cancellationToken;
+            
             var mainTask = Run();
             RunningTasks.Add(mainTask);
             if (Configuration.HostShouldSendDummyRequests())
             {
                 RunningTasks.Add(SpamWithDummyRequests());
             }
-            return mainTask;
+            
+            return Task.WhenAll(RunningTasks);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Logger.LogInformation("Stopping host");
-            foreach (var runningTask in RunningTasks)
+            foreach (var runningTask in RunningTasks.ToArray())
             {
                 runningTask.Wait(cancellationToken);
             }
@@ -63,7 +68,7 @@ namespace SafeRebus.Host
         private Task Run()
         {
             Logger.LogInformation("Starting main host job - sending requests, and expects successful replies.");
-            Logger.LogInformation($"Sending {RequestsPerCycle} requests every {PauseBetweenRequestsMs} millisecond.");
+            Logger.LogInformation($"Sending {RequestsPerCycle} during each cycle.");
             return RunUntilCancelled(async () =>
             {
                 var requests = GetRequests(RequestsPerCycle);
@@ -71,8 +76,9 @@ namespace SafeRebus.Host
                 {
                     await Bus.Send(request);
                 } 
-                await Tools.WaitUntilSuccess(() => AssertReceivedResponses(requests));  
-                await Task.Delay(TimeSpan.FromMilliseconds(PauseBetweenRequestsMs));
+                await Tools.WaitUntilSuccess(
+                    () => AssertReceivedResponses(requests));
+                Logger.LogInformation("I'm all fine!");
             });
         }
 
@@ -83,15 +89,22 @@ namespace SafeRebus.Host
             {
                 var request = new DummyRequest();
                 await Bus.Send(request);
-                await Task.Delay(TimeSpan.FromMilliseconds(10));
             });
         }
 
         private async Task RunUntilCancelled(Func<Task> func)
         {
-            while (!CancellationToken.IsCancellationRequested)
+            while (!CancellationToken.IsCancellationRequested && !ErrorStop)
             {
-                await func.Invoke();
+                try
+                {
+                    await func.Invoke();
+                }
+                catch
+                {
+                    ErrorStop = true;
+                    throw;
+                }
             }
         }
 

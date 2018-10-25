@@ -27,7 +27,7 @@ def BuildDocker(buildSelection):
     if buildSelection == 'run':
         os.chdir(srcFolder[0])
         DockerComposeTools.DockerComposeUp(migratorComposeFiles)
-        DockerComposeTools.DockerComposeUp(generalComposeFiles, False)
+        DockerComposeTools.DockerComposeUp(generalComposeFiles)
         os.chdir(srcFolder[1])
     
     elif buildSelection == 'build':

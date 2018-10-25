@@ -11,13 +11,10 @@ namespace SafeRebus.Config
         public static bool InContainer => 
             Environment.GetEnvironmentVariable("RUNNING_IN_CONTAINER") == "true";
 
-        public static bool DropJokerExceptions
+        public static bool UseJokerExceptions
         {
-            get => Environment.GetEnvironmentVariable("DROP_JOKER_EXCEPTIONS") == "true";
-            set
-            {
-                Environment.SetEnvironmentVariable("DROP_JOKER_EXCEPTIONS", value.ToString());
-            }
+            get => Environment.GetEnvironmentVariable("USE_JOKER_EXCEPTIONS") == "true";
+            set => Environment.SetEnvironmentVariable("USE_JOKER_EXCEPTIONS", value.ToString().ToLower());
         }
 
     }

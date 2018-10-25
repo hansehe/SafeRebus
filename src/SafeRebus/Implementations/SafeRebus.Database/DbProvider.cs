@@ -59,10 +59,6 @@ namespace SafeRebus.Database
 
         public void Dispose()
         {
-            if (DbTransaction?.Connection != null)
-            {   
-                DbTransaction?.Commit();
-            }
             DbTransaction?.Dispose();
             DbConnection?.Dispose();
         }

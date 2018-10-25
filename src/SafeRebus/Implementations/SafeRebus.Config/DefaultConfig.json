@@ -9,9 +9,8 @@
     }
   },
   "host": {
-    "pauseBetweenRequestsMs": 1000,
-    "requestsPerCycle": 2,
-    "sendDummyRequests": false
+    "requestsPerCycle": 100,
+    "sendDummyRequests": true
   },
   "rabbitMq": {
     "timeoutMs": 5000,

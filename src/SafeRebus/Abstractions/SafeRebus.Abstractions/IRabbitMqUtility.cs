@@ -5,6 +5,8 @@ namespace SafeRebus.Abstractions
     public interface IRabbitMqUtility
     {
         void WaitForAvailableRabbitMq();
+
+        void PurgeInputQueue();
         
         string ConnectionString { get; }
         
