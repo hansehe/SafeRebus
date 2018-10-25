@@ -1,23 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
 
-namespace SafeRebus.Database.Select
+namespace SafeRebus.Database.Delete
 {
-    public static class SelectCorrelationId
+    public static class DeleteCorrelationIdsFromTimestamp
     {
-        private const string SqlTemplate = "SELECT  {0}.{1} (@id)";
+        private const string SqlTemplate = "DELETE FROM {0}.{1} WHERE timestamp < @timestamp";
         
-        public static Task Execute(
+        public static Task Delete(
             IDbConnection dbConnection,
             IConfiguration configuration,
-            Guid correlationId)
+            DateTime tooOldThreshold)
         {
             var @params = new DynamicParameters();
-            @params.Add(Columns.Id, correlationId);
+            @params.Add(Columns.Timestamp, tooOldThreshold);
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
                 Tables.OutboxTable);

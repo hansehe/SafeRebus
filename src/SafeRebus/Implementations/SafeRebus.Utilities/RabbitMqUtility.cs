@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
-using Rebus.Logging;
 using SafeRebus.Abstractions;
 using SafeRebus.Config;
+using LogLevel = Rebus.Logging.LogLevel;
 
 namespace SafeRebus.Utilities
 {
     public class RabbitMqUtility : IRabbitMqUtility
     {
+        private readonly ILogger Logger;
         private readonly IConfiguration Configuration;
         
         public RabbitMqUtility(
+            ILogger<RabbitMqUtility> logger,
             IConfiguration configuration)
         {
+            Logger = logger;
             Configuration = configuration;
         }
 
@@ -44,20 +48,24 @@ namespace SafeRebus.Utilities
             return connectionString;
         }
         
-        private static void WaitForAvailableRabbitMq(TimeSpan timeSpan, IConnectionFactory connectionFactory)
+        private void WaitForAvailableRabbitMq(TimeSpan timeSpan, IConnectionFactory connectionFactory)
         {
-            Console.WriteLine($"Trying to connect to rabbitMq with url: {connectionFactory.Uri}");
+            Logger.LogInformation($"Trying to connect to rabbitMq with url: {connectionFactory.Uri}");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             while (stopwatch.Elapsed < timeSpan)
             {
                 if (TryConnectRabbitMq(connectionFactory))
                 {
-                    Console.WriteLine("Successfully connected with rabbitMq!");
+                    Logger.LogInformation("Successfully connected with rabbitMq!");
                     return;
                 }
             }
-            throw new Exception("Could not establish a connection with rabbitmq! Please review hostname, username and/or password.");
+
+            const string errMsg =
+                "Could not establish a connection with rabbitmq! Please review hostname, username and/or password.";
+            Logger.LogError(errMsg);
+            throw new Exception(errMsg);
         }
 
         private static bool TryConnectRabbitMq(IConnectionFactory connectionFactory)

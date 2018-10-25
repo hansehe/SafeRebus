@@ -11,9 +11,6 @@ namespace SafeRebus.RebusSteps
         {
             // The steps are executed in the order they are registered.
             return configurer
-                .UseExecutionScope(serviceProvider)
-                .HandleMessagesInsideTransactionScope(serviceProvider)
-                .HandleMessagesInsideDbTransactionScope(serviceProvider)
                 .HandleMessageWithOutboxPattern(serviceProvider);
         }
     }

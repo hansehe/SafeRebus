@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SafeRebus.Abstractions;
 using SafeRebus.Builder;
 
 namespace SafeRebus.TestUtilities
@@ -18,6 +16,25 @@ namespace SafeRebus.TestUtilities
             {
                 await action.Invoke(scope);
             }
+        }
+        
+        public static async Task ExecuteInDbTransactionScopeWithRollback(Func<IServiceScope, Task> action)
+        {
+            await ExecuteInScope(async scope =>
+            {
+                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
+                using (var transaction = dbProvider.GetDbTransaction())
+                {
+                    try
+                    {
+                        await action.Invoke(scope);
+                    }
+                    finally
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            });
         }
         
         public static IServiceProvider GetServiceProvider()

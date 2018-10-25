@@ -5,8 +5,9 @@ namespace SafeRebus.Abstractions
 {
     public interface IOutboxRepository
     {
-        Task InsertMessageCorrelationId(Guid id);
-        Task<bool> MessageCorrelationIdExists(Guid id);
-        Task CleanOldMessageCorrelationIds(TimeSpan threshold);
+        Task<bool> TryInsertMessageId(Guid id);
+        Task InsertMessageId(Guid id);
+        Task<bool> MessageIdExists(Guid id);
+        Task CleanOldMessageIds(TimeSpan tooOldThreshold);
     }
 }

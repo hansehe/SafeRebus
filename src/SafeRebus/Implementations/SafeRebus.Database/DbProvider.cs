@@ -25,7 +25,7 @@ namespace SafeRebus.Database
         {
             Configuration = configuration;
         }
-        
+
         public string GetConnectionString()
         {
             var connectionString = string.Format(ConnectionStringTemplate,
@@ -49,7 +49,7 @@ namespace SafeRebus.Database
             DbTransaction = DbTransaction ?? GetDbConnection().BeginTransaction();
             return DbTransaction;
         }
-        
+
         private IDbConnection CreateAndOpenDbConnection()
         {
             var dbConnection = new NpgsqlConnection(GetConnectionString());
@@ -59,6 +59,10 @@ namespace SafeRebus.Database
 
         public void Dispose()
         {
+            if (DbTransaction?.Connection != null)
+            {   
+                DbTransaction?.Commit();
+            }
             DbTransaction?.Dispose();
             DbConnection?.Dispose();
         }

@@ -18,13 +18,24 @@ namespace SafeRebus.RebusSteps.IncomingSteps
         
         public async Task Process(IncomingStepContext context, Func<Task> next)
         {
-            var outboxRepository = ServiceProvider.GetService<IOutboxRepository>();
-            var correlationId = context.Load<TransportMessage>().Headers[Headers.CorrelationId];
-            var correlationGuidId = Guid.Parse(correlationId);
-            if (!await outboxRepository.MessageCorrelationIdExists(correlationGuidId))
+            using (var scope = ServiceProvider.CreateScope())
             {
-                await outboxRepository.InsertMessageCorrelationId(correlationGuidId);
-                await next();
+                var outboxRepository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
+                var messageId = context.Load<TransportMessage>().Headers[Headers.MessageId];
+                var messageGuidId = Guid.Parse(messageId);
+                if (await outboxRepository.TryInsertMessageId(messageGuidId))
+                {
+                    try
+                    {
+                        await next();
+                    }
+                    catch (Exception e)
+                    {
+                        dbProvider.GetDbTransaction().Rollback();
+                        throw;
+                    }
+                }
             }
         }
     }

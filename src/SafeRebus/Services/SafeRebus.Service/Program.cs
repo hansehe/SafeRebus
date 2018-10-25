@@ -1,23 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Abstractions;
+﻿using Microsoft.Extensions.Hosting;
 using SafeRebus.Builder;
 
-namespace SafeRebusBusService
+namespace SafeRebus.Service
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var provider = new ServiceCollection()
-                .ConfigureWithSafeRebus()
-                .BuildServiceProvider();
-            
-            using (var scope = provider.CreateScope())
-            {
-                var runner = scope.ServiceProvider.GetService<IRebusRunner>();
-                runner.Run().Wait();
-            }
+            SafeRebusHostBuilder.BuildSafeRebusHostBuilder()
+                .Run();
         }
     }
 }

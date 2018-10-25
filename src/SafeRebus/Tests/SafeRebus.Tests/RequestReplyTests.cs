@@ -1,14 +1,9 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Rebus.Bus;
-using SafeRebus.Abstractions;
-using SafeRebus.Contracts.Responses;
 using Xunit;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using SafeRebus.Config;
-using SafeRebus.MessageHandler.MessageHandlers;
+using SafeRebus.MessageHandler;
 using SafeRebus.TestUtilities;
 
 namespace SafeRebus.Tests
@@ -19,16 +14,14 @@ namespace SafeRebus.Tests
         [Fact]
         public async Task AsyncRequestReply_Success()
         {
-            await TestServiceExecutor.ExecuteInScope(async scope =>
-            {
-                var bus = scope.ServiceProvider.GetService<IBus>();
-                var request = TestTools.GetRequest();
-                await bus.Send(request);
-                await TestTools.WaitUntilSuccess(async () =>
-                    {
-                        SafeRebusResponseMessageHandler.ReceivedResponses.Should().ContainKey(request.Id);
-                    });
-            });
+            var serviceProvider = TestServiceExecutor.GetServiceProvider();
+            var bus = serviceProvider.GetRequiredService<IBus>();
+            var request = TestTools.GetRequest();
+            await bus.Send(request);
+            await TestTools.WaitUntilSuccess(async () =>
+                {
+                    SafeRebusResponseMessageHandler.ReceivedResponses.Should().ContainKey(request.Id);
+                });
         }
     }
 }

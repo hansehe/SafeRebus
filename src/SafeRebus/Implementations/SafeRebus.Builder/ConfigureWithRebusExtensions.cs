@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace SafeRebus.Builder
 {
@@ -11,12 +11,12 @@ namespace SafeRebus.Builder
         public static IServiceCollection ConfigureWithSafeRebus(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
             return serviceCollection
-                .ConfigureWith(MessageProcessor.ServiceRegistration.Register)
                 .ConfigureWith(MessageHandler.ServiceRegistration.Register)
                 .ConfigureWith(Database.ServiceRegistration.Register)
                 .ConfigureWith(Utilities.ServiceRegistration.Register)
-                .ConfigureWith(Runner.ServiceRegistration.Register)
-                .UseDefaultRebusConfiguration(overrideConfig);
+                .ConfigureWith(Host.ServiceRegistration.Register)
+                .UseDefaultRebusConfiguration(overrideConfig)
+                .UseDefaultLogging();
         }
         
         public static IServiceCollection ConfigureWithSafeRebusMigration(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
@@ -34,6 +34,13 @@ namespace SafeRebus.Builder
                 .AddJsonFileIfTrue(Config.BaseConfig.DefaultConfigDockerFilename, () => Config.BaseConfig.InContainer)
                 .AddInMemoryIfTrue(overrideConfig, () => overrideConfig != null)
                 .Build());
+        }
+
+        private static IServiceCollection UseDefaultLogging(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+                .AddLogging(configure => configure
+                    .AddConsole());
         }
 
         private static IServiceCollection ConfigureWith(this IServiceCollection serviceCollection,

@@ -10,5 +10,8 @@ namespace SafeRebus.Config
         
         public static bool InContainer => 
             Environment.GetEnvironmentVariable("RUNNING_IN_CONTAINER") == "true";
+        
+        public static bool SendDummyRequests => 
+            Environment.GetEnvironmentVariable("SPAM_DUMMY_REQUESTS") == "true";
     }
 }
