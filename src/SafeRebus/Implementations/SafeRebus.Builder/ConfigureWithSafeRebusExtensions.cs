@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace SafeRebus.Builder
 {
@@ -15,7 +13,7 @@ namespace SafeRebus.Builder
                 .ConfigureWith(Database.ServiceRegistration.Register)
                 .ConfigureWith(Utilities.ServiceRegistration.Register)
                 .ConfigureWith(Host.ServiceRegistration.Register)
-                .UseDefaultRebusConfiguration(overrideConfig)
+                .UseDefaultSafeRebusConfiguration(overrideConfig)
                 .UseDefaultLogging();
         }
         
@@ -24,51 +22,16 @@ namespace SafeRebus.Builder
             return serviceCollection
                 .ConfigureWith(Migration.ServiceRegistration.Register)
                 .ConfigureWith(Database.ServiceRegistration.Register)
-                .UseDefaultRebusConfiguration(overrideConfig);
+                .UseDefaultSafeRebusConfiguration(overrideConfig);
         }
 
-        private static IServiceCollection UseDefaultRebusConfiguration(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
+        private static IServiceCollection UseDefaultSafeRebusConfiguration(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
             return serviceCollection.AddScoped<IConfiguration>(serviceProvider => new ConfigurationBuilder()
                 .AddJsonFile(Config.BaseConfig.DefaultConfigFilename)
                 .AddJsonFileIfTrue(Config.BaseConfig.DefaultConfigDockerFilename, () => Config.BaseConfig.InContainer)
                 .AddInMemoryIfTrue(overrideConfig, () => overrideConfig != null)
                 .Build());
-        }
-
-        private static IServiceCollection UseDefaultLogging(this IServiceCollection serviceCollection)
-        {
-            return serviceCollection
-                .AddLogging(configure => configure
-                    .AddConsole());
-        }
-
-        private static IServiceCollection ConfigureWith(this IServiceCollection serviceCollection,
-            Func<IServiceCollection, IServiceCollection> func)
-        {
-            return func.Invoke(serviceCollection);
-        }
-
-        private static IConfigurationBuilder AddJsonFileIfTrue(this IConfigurationBuilder configurationBuilder,
-            string path,
-            Func<bool> func)
-        {
-            if (func.Invoke())
-            {
-                configurationBuilder.AddJsonFile(path);
-            }
-            return configurationBuilder;
-        }
-        
-        private static IConfigurationBuilder AddInMemoryIfTrue(this IConfigurationBuilder configurationBuilder,
-            Dictionary<string, string> dict,
-            Func<bool> func)
-        {
-            if (func.Invoke())
-            {
-                configurationBuilder.AddInMemoryCollection(dict);
-            }
-            return configurationBuilder;
         }
     }
 }

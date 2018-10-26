@@ -35,7 +35,7 @@ namespace SafeRebus.MessageHandler
         private async Task HandleResponse(SafeRebusResponse response)
         {
             await ResponseRepository.InsertResponse(response);
-            Tools.MaybeThrowJokerException();
+            JokerException.MaybeThrowJokerException();
         }
     }
 }

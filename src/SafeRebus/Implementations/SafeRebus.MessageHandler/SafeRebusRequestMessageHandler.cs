@@ -28,7 +28,7 @@ namespace SafeRebus.MessageHandler
             Logger.LogDebug($"Received message: {typeof(SafeRebusRequest)}");
             var response = HandleRequest(message);
             await Bus.Reply(response);
-            Tools.MaybeThrowJokerException();
+            JokerException.MaybeThrowJokerException();
         }
 
         private static SafeRebusResponse HandleRequest(SafeRebusRequest request)
