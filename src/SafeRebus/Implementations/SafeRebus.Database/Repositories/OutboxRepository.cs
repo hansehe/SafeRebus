@@ -57,12 +57,11 @@ namespace SafeRebus.Database.Repositories
             return savedIds.Any(savedId => savedId == id);
         }
 
-        public Task CleanOldMessageIds(TimeSpan tooOldThreshold)
+        public async Task CleanOldMessageIds(TimeSpan tooOldThreshold)
         {
-            var dateTimeThreshold = DateTime.UtcNow - tooOldThreshold;
-            Logger.LogDebug($"Deleting all old message ids before datetime: {dateTimeThreshold.ToString(CultureInfo.InvariantCulture)}");
-            return DbExecutor.ExecuteInTransactionAsync(dbConnection =>
-                DeleteCorrelationIdsFromTimestamp.Delete(dbConnection, Configuration, dateTimeThreshold));
+            Logger.LogDebug($"Deleting all old message ids older then: {tooOldThreshold.ToString()}");
+            await DbExecutor.ExecuteInTransactionAsync(dbConnection =>
+                DeleteCorrelationIdsFromTimestamp.Delete(dbConnection, Configuration, tooOldThreshold));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace SafeRebus.TestUtilities
                 {"rabbitMq:outputQueue", randomQueue},
                 {"database:schema", randomSchema},
                 {"host:sendDummyRequests", true.ToString()},
+                {"host:shouldCleanOutbox", true.ToString()},
                 {"host:requestsPerCycle", 100.ToString()},
             };
 

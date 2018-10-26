@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -35,6 +37,13 @@ namespace SafeRebus.Database.Repositories
             Logger.LogDebug($"Selecting response with id: {id.ToString()}");
             return DbExecutor.SelectInTransactionAsync(dbConnection =>
                 Select.SelectResponse.Select(dbConnection, Configuration, id));
+        }
+
+        public Task<IEnumerable<SafeRebusResponse>> SelectResponses(IEnumerable<Guid> ids)
+        {
+            Logger.LogDebug($"Selecting multiple responses");
+            return DbExecutor.SelectInTransactionAsync(dbConnection =>
+                Select.SelectResponses.Select(dbConnection, Configuration, ids.ToArray()));
         }
     }
 }

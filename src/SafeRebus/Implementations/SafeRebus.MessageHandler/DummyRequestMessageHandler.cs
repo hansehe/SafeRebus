@@ -18,8 +18,7 @@ namespace SafeRebus.MessageHandler
         
         public Task Handle(DummyRequest message)
         {
-            Logger.LogDebug($"Received message: {typeof(DummyRequest)}");
-            Tools.MaybeThrowJokerException();
+            Logger.LogTrace($"Received message: {typeof(DummyRequest)}");
             return Task.CompletedTask;
         }
     }

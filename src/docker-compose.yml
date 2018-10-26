@@ -14,6 +14,7 @@ services:
   saferebus-service-2:
     <<: *saferebus-service
     environment:
+      - SPAM_WITH_DUMMY_REQUESTS=true
       - USE_JOKER_EXCEPTIONS=true
 
 networks:

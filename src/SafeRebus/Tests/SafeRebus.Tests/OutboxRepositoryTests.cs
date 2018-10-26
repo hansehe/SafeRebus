@@ -37,23 +37,46 @@ namespace SafeRebus.Tests
         }
         
         [Fact]
-        public Task CleanOld_Success()
+        public async Task CleanOld_Success()
         {
-            return TestServiceExecutor.ExecuteInDbTransactionScopeWithRollback(async scope =>
+            var savedIds = new List<Guid>();
+            var saveIdsShouldNotBeDeleted = new List<Guid>();
+            await TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
-                var savedIds = new List<Guid>();
+                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
                 for (int i = 0; i < 10; i++)
                 {
                     var id = Guid.NewGuid();
                     await repository.InsertMessageId(id);
                     savedIds.Add(id);
                 }
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                await repository.CleanOldMessageIds(TimeSpan.Zero);
+                dbProvider.GetDbTransaction().Commit();
+            });
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            await TestServiceExecutor.ExecuteInScope(async scope =>
+            {
+                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
+                for (int i = 0; i < 10; i++)
+                {
+                    var id = Guid.NewGuid();
+                    await repository.InsertMessageId(id);
+                    saveIdsShouldNotBeDeleted.Add(id);
+                }
+                dbProvider.GetDbTransaction().Commit();
+            });
+            await TestServiceExecutor.ExecuteInScope(async scope =>
+            {
+                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                await repository.CleanOldMessageIds(TimeSpan.FromSeconds(1.5));
                 foreach (var savedId in savedIds)
                 {
                     (await repository.MessageIdExists(savedId)).Should().BeFalse();
+                }
+                foreach (var savedIdShouldExist in saveIdsShouldNotBeDeleted)
+                {
+                    (await repository.MessageIdExists(savedIdShouldExist)).Should().BeTrue();
                 }
             });
         }

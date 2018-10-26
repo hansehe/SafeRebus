@@ -59,8 +59,17 @@ namespace SafeRebus.Database
 
         public void Dispose()
         {
+            RollbackTransactionIfNotCommitted();
             DbTransaction?.Dispose();
             DbConnection?.Dispose();
+        }
+
+        private void RollbackTransactionIfNotCommitted()
+        {
+            if (DbTransaction?.Connection != null)
+            {   
+                DbTransaction?.Rollback();
+            }
         }
     }
 }
