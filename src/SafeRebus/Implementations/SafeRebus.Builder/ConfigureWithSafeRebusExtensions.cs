@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SafeRebus.Builder
 {
-    public static class ConfigureWithRebusExtensions
+    public static class ConfigureWithSafeRebusExtensions
     {
         public static IServiceCollection ConfigureWithSafeRebus(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
