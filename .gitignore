@@ -44,5 +44,3 @@ packages
 __pycache__/
 .vscode/
 .idea/
-
-docker-compose.merged-to-publish.yml
