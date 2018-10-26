@@ -7,6 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
       <ProjectReference Include="..\SafeRebus.MessageHandler\SafeRebus.MessageHandler.csproj" />
+      <ProjectReference Include="..\SafeRebus.MessageSpammer.Host\SafeRebus.MessageSpammer.Host.csproj" />
       <ProjectReference Include="..\SafeRebus.Migration\SafeRebus.Migration.csproj" />
       <ProjectReference Include="..\SafeRebus.Host\SafeRebus.Host.csproj" />
       <ProjectReference Include="..\SafeRebus.Utilities\SafeRebus.Utilities.csproj" />

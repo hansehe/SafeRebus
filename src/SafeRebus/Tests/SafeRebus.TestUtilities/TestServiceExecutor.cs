@@ -1,6 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SafeRebus.Abstractions;
 using SafeRebus.Builder;
 
@@ -14,6 +16,16 @@ namespace SafeRebus.TestUtilities
             using (var scope = provider.CreateScope())
             {
                 await action.Invoke(scope);
+            }
+        }
+
+        public static async Task StartSpammerHost(CancellationToken cancellationToken, string outputQueue)
+        {
+            var provider = GetSpammerServiceProvider(outputQueue);
+            using (var scope = provider.CreateScope())
+            {
+                var spammerHost = scope.ServiceProvider.GetService<IHostedService>();
+                await spammerHost.StartAsync(cancellationToken);
             }
         }
         
@@ -42,6 +54,16 @@ namespace SafeRebus.TestUtilities
             overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebus(overrideConfig)
+                .BuildServiceProvider();
+            return provider;
+        }
+        
+        public static IServiceProvider GetSpammerServiceProvider(string outputQueue)
+        {
+            var overrideConfig = OverrideConfig.GetOverrideConfig();
+            overrideConfig["rabbitMq:outputQueue"] = outputQueue;
+            var provider = new ServiceCollection()
+                .ConfigureWithSafeRebusSpammer(overrideConfig)
                 .BuildServiceProvider();
             return provider;
         }

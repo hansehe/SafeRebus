@@ -5,8 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Rebus.Bus;
 using Xunit;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using SafeRebus.Abstractions;
+using SafeRebus.Config;
 using SafeRebus.Contracts.Responses;
 using SafeRebus.TestUtilities;
 using SafeRebus.Utilities;
@@ -42,7 +44,10 @@ namespace SafeRebus.Tests
                 var host = scope.ServiceProvider.GetService<IHostedService>();
                 var cancellationTokenSource = new CancellationTokenSource();
                 var hardCancellationTokenSource = new CancellationTokenSource();
-
+                
+                var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
+                var spammerTask = TestServiceExecutor.StartSpammerHost(cancellationTokenSource.Token, outputQueue);
+                
                 var timeoutTask = Task.Run(async () =>
                 {
                     var timeout = TimeSpan.FromSeconds(DurationOfAcidTestSec);
@@ -53,6 +58,7 @@ namespace SafeRebus.Tests
                 
                 await host.StartAsync(cancellationTokenSource.Token);
                 await timeoutTask;
+                await spammerTask;
             });
         }
     }

@@ -24,6 +24,15 @@ namespace SafeRebus.Builder
                 .ConfigureWith(Database.ServiceRegistration.Register)
                 .UseDefaultSafeRebusConfiguration(overrideConfig);
         }
+        
+        public static IServiceCollection ConfigureWithSafeRebusSpammer(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
+        {
+            return serviceCollection
+                .ConfigureWith(MessageSpammer.Host.ServiceRegistration.Register)
+                .ConfigureWith(Utilities.ServiceRegistration.Register)
+                .UseDefaultSafeRebusConfiguration(overrideConfig)
+                .UseDefaultLogging();
+        }
 
         private static IServiceCollection UseDefaultSafeRebusConfiguration(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
