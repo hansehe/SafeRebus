@@ -8,7 +8,7 @@ using SafeRebus.Migration.MigrationModels;
 
 namespace SafeRebus.Migration
 {
-    public class ServiceRegistration
+    public static class ServiceRegistration
     {
         public static IServiceCollection Register(IServiceCollection serviceCollection)
         {

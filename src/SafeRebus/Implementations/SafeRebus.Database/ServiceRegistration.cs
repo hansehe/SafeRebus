@@ -4,7 +4,7 @@ using SafeRebus.Database.Repositories;
 
 namespace SafeRebus.Database
 {
-    public class ServiceRegistration
+    public static class ServiceRegistration
     {
         public static IServiceCollection Register(IServiceCollection serviceCollection)
         {
