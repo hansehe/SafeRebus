@@ -15,6 +15,7 @@ services:
     <<: *saferebus-service
     environment:
       - USE_JOKER_EXCEPTIONS=true
+      - JOKER_EXCEPTION_PROBABILITY_PERCENT=1
 
 networks:
   backend_network:

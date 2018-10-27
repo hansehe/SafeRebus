@@ -7,7 +7,6 @@ namespace SafeRebus.Utilities
     {
         private static readonly Random Random = new Random();
         private static readonly object GlobalLock = new object();
-        private const int JokerExceptionProbabilityInPercent = 1;
         
         public static void MaybeThrowJokerException()
         {
@@ -22,7 +21,7 @@ namespace SafeRebus.Utilities
                 randomPercent = Random.Next(100);                
             }
     
-            if (randomPercent < JokerExceptionProbabilityInPercent)
+            if (randomPercent < BaseConfig.JokerExceptionProbabilityInPercent)
             {
                 throw new Exception("Joker exception thrown!");
             }

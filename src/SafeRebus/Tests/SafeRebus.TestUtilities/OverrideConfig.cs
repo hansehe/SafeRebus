@@ -20,6 +20,7 @@ namespace SafeRebus.TestUtilities
             };
 
             BaseConfig.UseJokerExceptions = true;
+            BaseConfig.JokerExceptionProbabilityInPercent = 1;
             
             return overrideDict;
         }
