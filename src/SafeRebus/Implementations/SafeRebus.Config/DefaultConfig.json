@@ -9,11 +9,9 @@
     }
   },
   "host": {
-    "cleaningOutboxTimerPeriodSec": 10,
+    "cleaningOutboxCyclePeriodSec": 10,
     "cleanOldMessageIdsFromOutboxTimeThresholdSec": 30,
-    "requestsPerCycle": 10,
-    "sendDummyRequests": false,
-    "shouldCleanOutbox": true
+    "requestsPerCycle": 10
   },
   "rabbitMq": {
     "timeoutMs": 5000,

@@ -11,24 +11,10 @@ services:
     networks:
       - backend_network
 
-  saferebus-spammer-service: &saferebus-spammer-service
-    image: saferebus.spammer.service
-    build:
-      context: .
-      dockerfile: SafeRebus/Services/SafeRebus.Spammer.Service/Dockerfile
-    env_file:
-      - test.env
-    networks:
-      - backend_network
-
   saferebus-service-2:
     <<: *saferebus-service
     environment:
-      - SPAM_WITH_DUMMY_REQUESTS=true
       - USE_JOKER_EXCEPTIONS=true
-
-  saferebus-spammer-service-2:
-    <<: *saferebus-spammer-service
 
 networks:
   backend_network:

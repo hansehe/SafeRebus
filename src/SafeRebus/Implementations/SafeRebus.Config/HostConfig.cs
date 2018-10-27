@@ -8,15 +8,10 @@ namespace SafeRebus.Config
         private const long DefaultCleaningOutboxTimerPeriodSec = 10;
         private const long DefaultCleanOldMessageIdsFromOutboxTimeThresholdSec = 30;
         private const int DefaultRequestsPerCycle = 10;
-        private const bool DefaultShouldSendDummyRequests = false;
-        private const bool DefaultShouldCleanOutbox = true;
         
-        private static bool OverrideSendDummyRequests => 
-            Environment.GetEnvironmentVariable("SPAM_WITH_DUMMY_REQUESTS") == "true";
-        
-        public static TimeSpan GetHostCleaningOutboxTimerPeriod(this IConfiguration configuration)
+        public static TimeSpan GetHostCleaningOutboxCyclePeriod(this IConfiguration configuration)
         {
-            if (!long.TryParse(configuration["host:cleaningOutboxTimerPeriodSec"], out var period))
+            if (!long.TryParse(configuration["host:cleaningOutboxCyclePeriodSec"], out var period))
             {
                 period = DefaultCleaningOutboxTimerPeriodSec;
             }
@@ -25,7 +20,7 @@ namespace SafeRebus.Config
             return timespanPeriod;
         }
         
-        public static TimeSpan GetHostCleanOldMessageIdsFromOutboxTimeThresholdSec(this IConfiguration configuration)
+        public static TimeSpan GetHostCleanOldMessageIdsFromOutboxTimeThreshold(this IConfiguration configuration)
         {
             if (!long.TryParse(configuration["host:timeThresholdSecForCleaningOutbox"], out var threshold))
             {
@@ -43,24 +38,6 @@ namespace SafeRebus.Config
                 requests = DefaultRequestsPerCycle;
             }
             return requests;
-        }
-        
-        public static bool HostShouldSendDummyRequests(this IConfiguration configuration)
-        {
-            if (!bool.TryParse(configuration["host:sendDummyRequests"], out var shouldSendDummyRequests))
-            {
-                shouldSendDummyRequests = DefaultShouldSendDummyRequests;
-            }
-            return shouldSendDummyRequests || OverrideSendDummyRequests;
-        }
-        
-        public static bool HostShouldCleanOutbox(this IConfiguration configuration)
-        {
-            if (!bool.TryParse(configuration["host:shouldCleanOutbox"], out var cleanOutbox))
-            {
-                cleanOutbox = DefaultShouldCleanOutbox;
-            }
-            return cleanOutbox;
         }
     }
 }

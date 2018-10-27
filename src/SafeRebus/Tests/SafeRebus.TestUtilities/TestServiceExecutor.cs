@@ -15,18 +15,33 @@ namespace SafeRebus.TestUtilities
             var provider = GetServiceProvider();
             using (var scope = provider.CreateScope())
             {
-                await action.Invoke(scope);
+                try
+                {
+                    await action.Invoke(scope);
+                }
+                finally
+                {
+                    TryDeleteTestQueue(scope);
+                }
             }
         }
+        
+        public static IHostedService StartOutboxCleanerHost(CancellationToken cancellationToken, string schema)
+        {
+            var provider = GetOutboxCleanerServiceProvider(schema);
+            var scope = provider.CreateScope();
+            var outboxCleanerHost = scope.ServiceProvider.GetService<IHostedService>();
+            outboxCleanerHost.StartAsync(cancellationToken);
+            return outboxCleanerHost;
+        }
 
-        public static async Task StartSpammerHost(CancellationToken cancellationToken, string outputQueue)
+        public static IHostedService StartSpammerHost(CancellationToken cancellationToken, string outputQueue)
         {
             var provider = GetSpammerServiceProvider(outputQueue);
-            using (var scope = provider.CreateScope())
-            {
-                var spammerHost = scope.ServiceProvider.GetService<IHostedService>();
-                await spammerHost.StartAsync(cancellationToken);
-            }
+            var scope = provider.CreateScope();
+            var spammerHost = scope.ServiceProvider.GetService<IHostedService>();
+            spammerHost.StartAsync(cancellationToken);
+            return spammerHost;
         }
         
         public static async Task ExecuteInDbTransactionScopeWithRollback(Func<IServiceScope, Task> action)
@@ -58,9 +73,20 @@ namespace SafeRebus.TestUtilities
             return provider;
         }
         
+        public static IServiceProvider GetOutboxCleanerServiceProvider(string schema)
+        {
+            var overrideConfig = OverrideConfig.GetOverrideConfig();
+            overrideConfig["database:schema"] = schema;
+            var provider = new ServiceCollection()
+                .ConfigureWithSafeRebusOutboxCleaner(overrideConfig)
+                .BuildServiceProvider();
+            return provider;
+        }
+        
         public static IServiceProvider GetSpammerServiceProvider(string outputQueue)
         {
             var overrideConfig = OverrideConfig.GetOverrideConfig();
+            overrideConfig["rabbitMq:inputQueue"] = outputQueue;
             overrideConfig["rabbitMq:outputQueue"] = outputQueue;
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebusSpammer(overrideConfig)
@@ -74,6 +100,19 @@ namespace SafeRebus.TestUtilities
                 .ConfigureWithSafeRebusMigration(OverrideConfig.GetOverrideConfig())
                 .BuildServiceProvider();
             return provider;
+        }
+
+        private static void TryDeleteTestQueue(IServiceScope scope)
+        {
+            try
+            {
+                var rabbitMqUtility = scope.ServiceProvider.GetService<IRabbitMqUtility>();
+                rabbitMqUtility.DeleteInputQueue();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

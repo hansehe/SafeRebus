@@ -11,6 +11,13 @@ namespace SafeRebus.Builder
                 .Build();
         }
         
+        public static IHost BuildSafeRebusOutboxCleanerHost()
+        {
+            return new HostBuilder()
+                .ConfigureServices(serviceCollection => serviceCollection.ConfigureWithSafeRebusOutboxCleaner())
+                .Build();
+        }
+        
         public static IHost BuildSafeRebusSpammerHost()
         {
             return new HostBuilder()

@@ -57,6 +57,22 @@ namespace SafeRebus.Utilities
             return 0;
         }
         
+        public static void DeleteQueue(this IConnectionFactory connectionFactory, string queue)
+        {
+            using (var conn = connectionFactory.CreateConnection())
+            using (var model = conn.CreateModel())
+            {
+                try
+                {
+                    model.QueueDeleteNoWait(queue);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+        }
+        
         private static bool TryConnectRabbitMq(this IConnectionFactory connectionFactory)
         {
             try

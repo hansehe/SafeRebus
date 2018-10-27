@@ -46,19 +46,21 @@ namespace SafeRebus.Tests
                 var hardCancellationTokenSource = new CancellationTokenSource();
                 
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
-                var spammerTask = TestServiceExecutor.StartSpammerHost(cancellationTokenSource.Token, outputQueue);
+                var schema = scope.ServiceProvider.GetService<IConfiguration>().GetDbSchema();
+                var outboxCleanerHost = TestServiceExecutor.StartOutboxCleanerHost(cancellationTokenSource.Token, schema);
+                var spammerHost = TestServiceExecutor.StartSpammerHost(cancellationTokenSource.Token, outputQueue);
                 
                 var timeoutTask = Task.Run(async () =>
                 {
-                    var timeout = TimeSpan.FromSeconds(DurationOfAcidTestSec);
-                    await Task.Delay(timeout);
+                    await Task.Delay(TimeSpan.FromSeconds(DurationOfAcidTestSec));
                     cancellationTokenSource.Cancel();
                     await host.StopAsync(hardCancellationTokenSource.Token);
-                });
+                    await outboxCleanerHost.StopAsync(hardCancellationTokenSource.Token);
+                    await spammerHost.StopAsync(hardCancellationTokenSource.Token);
+                }, hardCancellationTokenSource.Token);
                 
                 await host.StartAsync(cancellationTokenSource.Token);
                 await timeoutTask;
-                await spammerTask;
             });
         }
     }

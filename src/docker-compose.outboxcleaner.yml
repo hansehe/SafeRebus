@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  saferebus-outboxcleaner-service: &saferebus-outboxcleaner-service
+    image: saferebus.outboxcleaner.service
+    build:
+      context: .
+      dockerfile: SafeRebus/Services/SafeRebus.OutboxCleaner.Service/Dockerfile
+    env_file:
+      - test.env
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true

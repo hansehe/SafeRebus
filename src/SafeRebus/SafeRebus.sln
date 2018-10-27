@@ -42,6 +42,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.MessageSpammer.Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.Spammer.Service", "Services\SafeRebus.Spammer.Service\SafeRebus.Spammer.Service.csproj", "{A08C6840-727D-4C38-85E0-A11538500935}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.OutboxCleaner.Host", "Implementations\SafeRebus.OutboxCleaner.Host\SafeRebus.OutboxCleaner.Host.csproj", "{895423F3-50F1-4BE4-95B2-688C8CE075FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.OutboxCleaner.Service", "Services\SafeRebus.OutboxCleaner.Service\SafeRebus.OutboxCleaner.Service.csproj", "{846F5FF4-B617-4798-829D-C13A93038D4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +116,14 @@ Global
 		{A08C6840-727D-4C38-85E0-A11538500935}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A08C6840-727D-4C38-85E0-A11538500935}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A08C6840-727D-4C38-85E0-A11538500935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895423F3-50F1-4BE4-95B2-688C8CE075FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895423F3-50F1-4BE4-95B2-688C8CE075FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895423F3-50F1-4BE4-95B2-688C8CE075FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895423F3-50F1-4BE4-95B2-688C8CE075FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{846F5FF4-B617-4798-829D-C13A93038D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846F5FF4-B617-4798-829D-C13A93038D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846F5FF4-B617-4798-829D-C13A93038D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846F5FF4-B617-4798-829D-C13A93038D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4B9DA0CE-595E-474C-86A8-5EFB9B6DFC6E} = {CD52143A-4B58-4E86-A5C8-DC945F0DD1CC}
@@ -130,5 +142,7 @@ Global
 		{25B60ACC-FD00-4CAD-9377-C80582B1F382} = {83A6BE31-2100-43E0-82AE-397D94BDD91D}
 		{FD73DBB1-AE9F-46A9-9230-0E0844E04A95} = {83A6BE31-2100-43E0-82AE-397D94BDD91D}
 		{A08C6840-727D-4C38-85E0-A11538500935} = {0B3D261C-9E09-42F1-9B00-C29CAAC434D7}
+		{895423F3-50F1-4BE4-95B2-688C8CE075FC} = {83A6BE31-2100-43E0-82AE-397D94BDD91D}
+		{846F5FF4-B617-4798-829D-C13A93038D4F} = {0B3D261C-9E09-42F1-9B00-C29CAAC434D7}
 	EndGlobalSection
 EndGlobal

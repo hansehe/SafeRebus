@@ -9,7 +9,7 @@ using SafeRebus.Config;
 
 namespace SafeRebus.Database.Delete
 {
-    public static class DeleteCorrelationIdsFromTimestamp
+    public static class DeleteMessageIdsFromTimestamp
     {
         private const string SqlTemplate = "DELETE FROM {0}.{1} WHERE timestamp < NOW() - (INTERVAL '{2} seconds')";
         

@@ -4,11 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SafeRebus.Abstractions;
-using SafeRebus.Config;
 using SafeRebus.Contracts.Requests;
 
 namespace SafeRebus.Host
@@ -25,19 +21,6 @@ namespace SafeRebus.Host
                 responseIds.Should().Contain(requestId);
             }
         }
-        
-        public static async Task CleanOutbox(this IServiceProvider serviceProvider, ILogger logger)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var threshold = scope.ServiceProvider.GetService<IConfiguration>().GetHostCleanOldMessageIdsFromOutboxTimeThresholdSec();
-                logger.LogInformation($"Cleaning outbox of message ids older then: {threshold.ToString()} seconds.");
-                var outboxRepository = scope.ServiceProvider.GetService<IOutboxRepository>();
-                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
-                await outboxRepository.CleanOldMessageIds(threshold);
-                dbProvider.GetDbTransaction().Commit();
-            }
-        }
 
         public static SafeRebusRequest[] GetRequests(int nRequests)
         {
@@ -49,10 +32,12 @@ namespace SafeRebus.Host
             return requests.ToArray();
         }
 
-        public static void StopTimer(Timer timer)
+        public static async Task RunUntilCancelled(Func<Task> func, CancellationToken cancellationToken)
         {
-            timer?.Change(Timeout.Infinite, 0);
-            timer?.Dispose();
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await func.Invoke();
+            }
         }
     }
 }

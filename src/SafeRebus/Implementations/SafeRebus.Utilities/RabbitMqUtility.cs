@@ -34,6 +34,12 @@ namespace SafeRebus.Utilities
             Logger.LogInformation($"Purged input queue {InputQueue} with {purgedMessages} hanging messages.");
         }
 
+        public void DeleteInputQueue()
+        {
+            GetConnectionFactory().DeleteQueue(InputQueue);
+            Logger.LogInformation($"Deleted input queue {InputQueue}.");
+        }
+
         public string ConnectionString => Configuration.BuildRabbitMqConnectionString();
 
         public string InputQueue => Configuration.GetRabbitMqInputQueue();

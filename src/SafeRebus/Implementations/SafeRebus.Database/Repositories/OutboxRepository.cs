@@ -46,7 +46,7 @@ namespace SafeRebus.Database.Repositories
         {
             Logger.LogDebug($"Inserting message id: {id.ToString()}");
             return DbExecutor.ExecuteInTransactionAsync(dbConnection =>
-                InsertCorrelationId.Execute(dbConnection, Configuration, id));
+                Insert.InsertMessageId.Execute(dbConnection, Configuration, id));
         }
 
         public async Task<bool> MessageIdExists(Guid id)
@@ -61,7 +61,7 @@ namespace SafeRebus.Database.Repositories
         {
             Logger.LogDebug($"Deleting all old message ids older then: {tooOldThreshold.ToString()}");
             await DbExecutor.ExecuteInTransactionAsync(dbConnection =>
-                DeleteCorrelationIdsFromTimestamp.Delete(dbConnection, Configuration, tooOldThreshold));
+                DeleteMessageIdsFromTimestamp.Delete(dbConnection, Configuration, tooOldThreshold));
         }
     }
 }

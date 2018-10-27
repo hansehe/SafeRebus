@@ -7,7 +7,7 @@ using SafeRebus.Config;
 
 namespace SafeRebus.Database.Insert
 {
-    public static class InsertCorrelationId
+    public static class InsertMessageId
     {
         private const string SqlTemplate = "INSERT INTO {0}.{1} (id) VALUES (@id)";
         
