@@ -45,7 +45,7 @@ namespace SafeRebus.Tests
             {
                 var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
                 var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
-                for (int i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     var id = Guid.NewGuid();
                     await repository.InsertMessageId(id);
@@ -58,7 +58,7 @@ namespace SafeRebus.Tests
             {
                 var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
                 var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
-                for (int i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     var id = Guid.NewGuid();
                     await repository.InsertMessageId(id);
