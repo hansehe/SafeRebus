@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  saferebus-spammer-service: &saferebus-spammer-service
+  saferebus-spammer-service-1: &saferebus-spammer-service
     image: saferebus.spammer.service
     build:
       context: .
