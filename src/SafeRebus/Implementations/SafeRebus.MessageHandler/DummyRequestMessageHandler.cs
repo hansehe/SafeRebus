@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rebus.Handlers;
 using SafeRebus.Contracts.Requests;
-using SafeRebus.Utilities;
 
 namespace SafeRebus.MessageHandler
 {

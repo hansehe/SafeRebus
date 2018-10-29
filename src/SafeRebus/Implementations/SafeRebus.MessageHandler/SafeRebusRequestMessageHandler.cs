@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rebus.Bus;
 using Rebus.Handlers;
-using SafeRebus.Contracts;
 using SafeRebus.Contracts.Requests;
 using SafeRebus.Contracts.Responses;
 using SafeRebus.Utilities;
