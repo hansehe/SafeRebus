@@ -6,7 +6,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
 
-namespace SafeRebus.Database.Outbox.Delete
+namespace SafeRebus.Outbox.Database.Delete
 {
     public static class DeleteMessageIdsFromTimestamp
     {

@@ -4,7 +4,7 @@ using Npgsql;
 using SafeRebus.Abstractions;
 using SafeRebus.Config;
 
-namespace SafeRebus.Database.Outbox
+namespace SafeRebus.Outbox.Database
 {
     public class DbProvider : IDbProvider
     {

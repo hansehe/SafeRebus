@@ -2,6 +2,8 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SafeRebus.Outbox.Cleaner.Host;
+using SafeRebus.Outbox.Migration;
 
 namespace SafeRebus.Extensions.Builder
 {
@@ -11,7 +13,7 @@ namespace SafeRebus.Extensions.Builder
         {
             return serviceCollection
                 .ConfigureWith(Database.ServiceRegistration.Register)
-                .ConfigureWith(Database.Outbox.ServiceRegistration.Register)
+                .ConfigureWith(Outbox.Database.ServiceRegistration.Register)
                 .ConfigureWith(Utilities.ServiceRegistration.Register);
         }
         
@@ -23,15 +25,15 @@ namespace SafeRebus.Extensions.Builder
                     Migration.ServiceRegistration.Register,
                     IncludeAllMigrationAssemblies(assembliesWithMigrationModels))
                 .ConfigureWith(Database.ServiceRegistration.Register)
-                .ConfigureWith(Database.Outbox.ServiceRegistration.Register);
+                .ConfigureWith(Outbox.Database.ServiceRegistration.Register);
         }
         
         public static IServiceCollection ConfigureWithSafeRebusOutboxCleaner(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .ConfigureWith(Host.OutboxCleaner.ServiceRegistration.Register)
+                .ConfigureWith(ServiceRegistration.Register)
                 .ConfigureWith(Database.ServiceRegistration.Register)
-                .ConfigureWith(Database.Outbox.ServiceRegistration.Register);
+                .ConfigureWith(Outbox.Database.ServiceRegistration.Register);
         }
 
         public static IConfigurationBuilder AddDefaultSafeRebusConfiguration(this IConfigurationBuilder configurationBuilder)
@@ -45,7 +47,7 @@ namespace SafeRebus.Extensions.Builder
         {
             var allAssembliesWithMigrationModels = new List<Assembly>
             {
-                Migration.Outbox.MigrationAssembly.GetMigrationAssembly
+                MigrationAssembly.GetMigrationAssembly
             };
             allAssembliesWithMigrationModels.AddRange(assembliesWithMigrationModels);
             return allAssembliesWithMigrationModels;

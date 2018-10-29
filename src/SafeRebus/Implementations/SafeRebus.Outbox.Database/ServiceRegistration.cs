@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Database.Outbox.Repositories;
 using SafeRebus.Outbox.Abstractions;
+using SafeRebus.Outbox.Database.Repositories;
 
-namespace SafeRebus.Database.Outbox
+namespace SafeRebus.Outbox.Database
 {
     public static class ServiceRegistration
     {

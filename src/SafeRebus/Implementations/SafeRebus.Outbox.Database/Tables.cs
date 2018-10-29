@@ -1,4 +1,4 @@
-namespace SafeRebus.Database.Outbox
+namespace SafeRebus.Outbox.Database
 {
     public static class Tables
     {

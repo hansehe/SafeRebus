@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SafeRebus.Abstractions;
-using SafeRebus.Database.Outbox.Select;
 using SafeRebus.Outbox.Abstractions;
+using SafeRebus.Outbox.Database.Delete;
+using SafeRebus.Outbox.Database.Select;
 
-namespace SafeRebus.Database.Outbox.Repositories
+namespace SafeRebus.Outbox.Database.Repositories
 {
     public class OutboxRepository : IOutboxRepository
     {
@@ -61,7 +62,7 @@ namespace SafeRebus.Database.Outbox.Repositories
         public Task CleanOldMessageIds(TimeSpan tooOldThreshold)
         {
             Logger.LogDebug($"Deleting all old message ids older then: {tooOldThreshold.ToString()}");
-            return Delete.DeleteMessageIdsFromTimestamp.Delete(
+            return DeleteMessageIdsFromTimestamp.Delete(
                 DbProvider.GetDbTransaction().Connection,
                 Configuration,
                 tooOldThreshold);

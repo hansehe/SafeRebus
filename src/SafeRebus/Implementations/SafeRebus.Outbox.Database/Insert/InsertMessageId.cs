@@ -5,7 +5,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
 
-namespace SafeRebus.Database.Outbox.Insert
+namespace SafeRebus.Outbox.Database.Insert
 {
     public static class InsertMessageId
     {

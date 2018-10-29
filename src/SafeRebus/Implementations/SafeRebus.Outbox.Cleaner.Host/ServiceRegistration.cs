@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Outbox.Cleaner.Host;
 
-namespace SafeRebus.Host.OutboxCleaner
+namespace SafeRebus.Outbox.Cleaner.Host
 {
     public static class ServiceRegistration
     {

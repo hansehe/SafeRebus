@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
 using SafeRebus.Database;
 
-namespace SafeRebus.Migration.Outbox
+namespace SafeRebus.Outbox.Migration
 {
     [Migration(0)]
     public class AddOutboxTable : FluentMigrator.Migration
@@ -20,7 +20,7 @@ namespace SafeRebus.Migration.Outbox
             var schema = Configuration.GetDbSchema();
             Create.Table(Tables.OutboxTable).InSchema(schema)
                 .WithColumn(Columns.Id).AsGuid().PrimaryKey()
-                .WithColumn(Database.Outbox.Columns.Timestamp).AsDateTime().WithDefault(SystemMethods.CurrentUTCDateTime);
+                .WithColumn(Database.Columns.Timestamp).AsDateTime().WithDefault(SystemMethods.CurrentUTCDateTime);
         }
 
         public override void Down()

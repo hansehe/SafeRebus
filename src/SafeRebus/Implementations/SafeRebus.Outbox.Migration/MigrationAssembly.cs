@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace SafeRebus.Migration.Outbox
+namespace SafeRebus.Outbox.Migration
 {
     public static class MigrationAssembly
     {

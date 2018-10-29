@@ -6,7 +6,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
 
-namespace SafeRebus.Database.Outbox.Select
+namespace SafeRebus.Outbox.Database.Select
 {
     public static class SelectMessageIds
     {
