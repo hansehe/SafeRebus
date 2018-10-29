@@ -13,23 +13,19 @@ namespace SafeRebus.MessageHandler
     {
         private readonly ILogger Logger;
         private readonly IResponseRepository ResponseRepository;
-        private readonly IDbProvider DbProvider;
 
         public SafeRebusResponseMessageHandler(
             ILogger<SafeRebusResponseMessageHandler> logger,
-            IResponseRepository responseRepository,
-            IDbProvider dbProvider)
+            IResponseRepository responseRepository)
         {
             Logger = logger;
             ResponseRepository = responseRepository;
-            DbProvider = dbProvider;
         }
         
         public async Task Handle(SafeRebusResponse message)
         {
             Logger.LogDebug($"Received message: {typeof(SafeRebusResponse)}");
             await HandleResponse(message);
-            DbProvider.GetDbTransaction().Commit();
         }
         
         private async Task HandleResponse(SafeRebusResponse response)

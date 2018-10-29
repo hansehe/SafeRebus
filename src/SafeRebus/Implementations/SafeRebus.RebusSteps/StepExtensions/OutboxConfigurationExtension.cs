@@ -8,9 +8,9 @@ namespace SafeRebus.RebusSteps.StepExtensions
 {
     internal static class OutboxConfigurationExtension 
     {
-        public static OptionsConfigurer HandleMessageWithOutboxPattern(this OptionsConfigurer configurer, IServiceProvider serviceProvider)
+        public static OptionsConfigurer HandleMessageWithOutboxPattern(this OptionsConfigurer configurer)
         {
-            return configurer.RegisterIncomingStep(new HandleOutboxIncomingStep(serviceProvider));
+            return configurer.RegisterIncomingStep(new HandleOutboxIncomingStep());
         }
     }
 }

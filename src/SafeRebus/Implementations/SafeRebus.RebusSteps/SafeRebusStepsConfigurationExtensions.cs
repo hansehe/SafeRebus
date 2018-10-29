@@ -6,12 +6,12 @@ namespace SafeRebus.RebusSteps
 {
     public static class SafeRebusStepsConfigurationExtensions
     {
-        public static OptionsConfigurer HandleSafeRebusSteps(this OptionsConfigurer configurer,
-            IServiceProvider serviceProvider)
+        public static OptionsConfigurer HandleSafeRebusSteps(this OptionsConfigurer configurer)
         {
             // The steps are executed in the order they are registered.
             return configurer
-                .HandleMessageWithOutboxPattern(serviceProvider);
+                .HandleDbTransaction()
+                .HandleMessageWithOutboxPattern();
         }
     }
 }

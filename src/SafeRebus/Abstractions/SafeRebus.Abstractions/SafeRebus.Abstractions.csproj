@@ -10,7 +10,6 @@
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
       <PackageReference Include="Rebus" Version="5.0.1" />
       <PackageReference Include="Rebus.RabbitMQ" Version="5.0.0-b02" />
-      <PackageReference Include="Rebus.ServiceProvider" Version="4.0.1" />
     </ItemGroup>
 
     <ItemGroup>

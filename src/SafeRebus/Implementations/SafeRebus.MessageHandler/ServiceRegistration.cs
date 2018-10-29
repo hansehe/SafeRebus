@@ -2,8 +2,8 @@
 using Rebus.Config;
 using Rebus.Handlers;
 using Rebus.Routing.TypeBased;
-using Rebus.ServiceProvider;
 using SafeRebus.Abstractions;
+using SafeRebus.ContainerAdapter;
 using SafeRebus.Contracts.Requests;
 using SafeRebus.Contracts.Responses;
 using SafeRebus.RebusSteps;
@@ -18,12 +18,12 @@ namespace SafeRebus.MessageHandler
                 .AddScoped<IHandleMessages<DummyRequest>, DummyRequestMessageHandler>()
                 .AddScoped<IHandleMessages<SafeRebusRequest>, SafeRebusRequestMessageHandler>()
                 .AddScoped<IHandleMessages<SafeRebusResponse>, SafeRebusResponseMessageHandler>()
-                .AddRebus((configure, serviceProvider) =>
+                .AddSafeRebus((configure, serviceProvider) =>
                 {
                     var rabbitMqUtility = serviceProvider.GetService<IRabbitMqUtility>();
                     return configure
                         .Logging(l => l.ColoredConsole(rabbitMqUtility.LogLevel))
-                        .Options(optionsConfigure => optionsConfigure.HandleSafeRebusSteps(serviceProvider))
+                        .Options(optionsConfigure => optionsConfigure.HandleSafeRebusSteps())
                         .Transport(t => t.UseRabbitMq(rabbitMqUtility.ConnectionString, rabbitMqUtility.InputQueue))
                         .Routing(r => r.TypeBased()
                             .Map<DummyRequest>(rabbitMqUtility.OutputQueue)

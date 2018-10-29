@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rebus.Config;
 using Rebus.Routing.TypeBased;
-using Rebus.ServiceProvider;
 using SafeRebus.Abstractions;
+using SafeRebus.ContainerAdapter;
 using SafeRebus.Contracts.Requests;
 
 namespace SafeRebus.MessageSpammer.Host
@@ -12,7 +12,7 @@ namespace SafeRebus.MessageSpammer.Host
         public static IServiceCollection Register(IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddRebus((configure, serviceProvider) =>
+                .AddSafeRebus((configure, serviceProvider) =>
                 {
                     var rabbitMqUtility = serviceProvider.GetService<IRabbitMqUtility>();
                     return configure

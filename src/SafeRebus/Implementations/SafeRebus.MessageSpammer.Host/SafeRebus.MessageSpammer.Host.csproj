@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
+      <ProjectReference Include="..\SafeRebus.ContainerAdapter\SafeRebus.ContainerAdapter.csproj" />
     </ItemGroup>
 
 </Project>
