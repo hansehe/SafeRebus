@@ -17,7 +17,7 @@ namespace SafeRebus.ContainerAdapter
     {
         private readonly IServiceProvider ServiceProvider;
         
-        IBus Bus;
+        private IBus Bus;
 
         public SafeRebusContainerAdapter(IServiceProvider serviceProvider)
         {
