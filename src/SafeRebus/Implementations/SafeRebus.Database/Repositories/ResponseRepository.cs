@@ -13,37 +13,43 @@ namespace SafeRebus.Database.Repositories
     {
         private readonly ILogger Logger;
         private readonly IConfiguration Configuration;
-        private readonly IDbExecutor DbExecutor;
+        private readonly IDbProvider DbProvider;
 
         public ResponseRepository(
             ILogger<ResponseRepository> logger,
             IConfiguration configuration,
-            IDbExecutor dbExecutor)
+            IDbProvider dbProvider)
         {
             Logger = logger;
             Configuration = configuration;
-            DbExecutor = dbExecutor;
+            DbProvider = dbProvider;
         }
 
         public Task InsertResponse(SafeRebusResponse response)
         {
             Logger.LogDebug($"Inserting response with id: {response.Id.ToString()}");
-            return DbExecutor.ExecuteInTransactionAsync(dbConnection =>
-                Insert.InsertResponse.Execute(dbConnection, Configuration, response));
+            return Insert.InsertResponse.Execute(
+                DbProvider.GetDbTransaction().Connection,
+                Configuration,
+                response);
         }
 
         public Task<SafeRebusResponse> SelectResponse(Guid id)
         {
             Logger.LogDebug($"Selecting response with id: {id.ToString()}");
-            return DbExecutor.SelectInTransactionAsync(dbConnection =>
-                Select.SelectResponse.Select(dbConnection, Configuration, id));
+            return Select.SelectResponse.Select(
+                DbProvider.GetDbTransaction().Connection,
+                Configuration,
+                id);
         }
 
         public Task<IEnumerable<SafeRebusResponse>> SelectResponses(IEnumerable<Guid> ids)
         {
             Logger.LogDebug($"Selecting multiple responses");
-            return DbExecutor.SelectInTransactionAsync(dbConnection =>
-                Select.SelectResponses.Select(dbConnection, Configuration, ids.ToArray()));
+            return Select.SelectResponses.Select(
+                DbProvider.GetDbTransaction().Connection,
+                Configuration,
+                ids.ToArray());
         }
     }
 }

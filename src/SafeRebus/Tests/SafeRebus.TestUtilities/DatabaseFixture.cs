@@ -44,9 +44,9 @@ namespace SafeRebus.TestUtilities
         
         private static void DeleteTestSchema(IServiceScope scope)
         {
-            var dbExecutor = scope.ServiceProvider.GetService<IDbExecutor>();
+            var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
             var sql = string.Format(DropSchemaSqlTemplate, MigratedDatabaseSchema);
-            dbExecutor.Execute(dbConnection => dbConnection.Execute(sql));
+            dbProvider.GetDbConnection().Execute(sql);
         }
     }
 }

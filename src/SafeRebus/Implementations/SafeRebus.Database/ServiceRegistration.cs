@@ -9,7 +9,6 @@ namespace SafeRebus.Database
         public static IServiceCollection Register(IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddScoped<IDbExecutor, DbExecutor>()
                 .AddScoped<IDbProvider, DbProvider>()
                 .AddScoped<IOutboxRepository, OutboxRepository>()
                 .AddScoped<IResponseRepository, ResponseRepository>();
