@@ -14,6 +14,7 @@ namespace SafeRebus.Extensions.Builder
             return serviceCollection
                 .ConfigureWith(Database.ServiceRegistration.Register)
                 .ConfigureWith(Outbox.Database.ServiceRegistration.Register)
+                .ConfigureWith(Outbox.Bus.ServiceRegistration.Register)
                 .ConfigureWith(Utilities.ServiceRegistration.Register);
         }
         
