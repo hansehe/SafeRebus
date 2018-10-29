@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using SafeRebus.Abstractions;
+using SafeRebus.Outbox.Abstractions;
 using SafeRebus.TestUtilities;
 using Xunit;
 

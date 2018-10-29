@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SafeRebus.MessageHandler.Host\SafeRebus.MessageHandler.Host.csproj" />
+      <ProjectReference Include="..\SafeRebus.MessageHandler.Migration\SafeRebus.MessageHandler.Migration.csproj" />
+      <ProjectReference Include="..\SafeRebus.MessageHandler\SafeRebus.MessageHandler.csproj" />
+      <ProjectReference Include="..\SafeRebus.MessageSpammer.Host\SafeRebus.MessageSpammer.Host.csproj" />
+    </ItemGroup>
+
+</Project>

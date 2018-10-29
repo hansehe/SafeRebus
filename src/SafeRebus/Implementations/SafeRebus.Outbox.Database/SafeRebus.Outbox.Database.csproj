@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Abstractions\SafeRebus.Outbox.Abstractions\SafeRebus.Outbox.Abstractions.csproj" />
+      <ProjectReference Include="..\SafeRebus.Config\SafeRebus.Config.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="1.50.5" />
+      <PackageReference Include="Npgsql" Version="4.0.3" />
+    </ItemGroup>
+
+</Project>

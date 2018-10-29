@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SafeRebus.Config;
+using SafeRebus.MessageHandler.Config;
 
 namespace SafeRebus.TestUtilities
 {
@@ -19,8 +19,8 @@ namespace SafeRebus.TestUtilities
                 {"host:requestsPerCycle", 50.ToString()},
             };
 
-            BaseConfig.UseJokerExceptions = true;
-            BaseConfig.JokerExceptionProbabilityInPercent = 1;
+            JokerExceptionsConfig.UseJokerExceptions = true;
+            JokerExceptionsConfig.JokerExceptionProbabilityInPercent = 1;
             
             return overrideDict;
         }

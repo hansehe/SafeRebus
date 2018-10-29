@@ -21,9 +21,9 @@ def BuildDocker(buildSelection):
         'docker-compose.migrator.yml'
     ]
     generalComposeFiles = [
-        'docker-compose.saferebus.yml',
+        'docker-compose.message.handler.yml',
         'docker-compose.outboxcleaner.yml',
-        'docker-compose.spammer.yml'
+        'docker-compose.message.spammer.yml'
     ]
 
     if buildSelection == 'run':

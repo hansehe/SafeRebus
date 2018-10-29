@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Rebus.Messages;
 using Rebus.Pipeline;
-using SafeRebus.Abstractions;
 using SafeRebus.Config;
+using SafeRebus.Outbox.Abstractions;
 
 namespace SafeRebus.RebusSteps.IncomingSteps
 {

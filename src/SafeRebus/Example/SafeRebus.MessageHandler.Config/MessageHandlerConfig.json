@@ -1,0 +1,5 @@
+{
+  "messageHandlerHost": {
+    "requestsPerCycle": 10
+  }
+}

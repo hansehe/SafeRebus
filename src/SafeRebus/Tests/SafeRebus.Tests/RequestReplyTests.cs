@@ -7,11 +7,10 @@ using Xunit;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using SafeRebus.Abstractions;
 using SafeRebus.Config;
-using SafeRebus.Contracts.Responses;
+using SafeRebus.MessageHandler.Abstractions;
+using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.TestUtilities;
-using SafeRebus.Utilities;
 
 namespace SafeRebus.Tests
 {
@@ -29,7 +28,7 @@ namespace SafeRebus.Tests
                 var repository = scope.ServiceProvider.GetService<IResponseRepository>();
                 var request = new SafeRebusResponse();
                 await bus.Send(request);
-                await Tools.WaitUntilSuccess(async () =>
+                await MessageHandler.Utilities.Tools.WaitUntilSuccess(async () =>
                 {
                     (await repository.SelectResponse(request.Id)).Id.Should().Be(request.Id);
                 });

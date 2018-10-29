@@ -1,16 +1,18 @@
-﻿using FluentMigrator.Runner;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using FluentMigrator.Runner;
+using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.VersionTableInfo;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SafeRebus.Abstractions;
-using SafeRebus.Migration.MigrationModels;
 
 namespace SafeRebus.Migration
 {
     public static class ServiceRegistration
     {
-        public static IServiceCollection Register(IServiceCollection serviceCollection)
+        public static IServiceCollection Register(IServiceCollection serviceCollection, IEnumerable<Assembly> assembliesWithMigrationModels)
         {
             return serviceCollection
                 .AddFluentMigratorCore()
@@ -23,9 +25,18 @@ namespace SafeRebus.Migration
                 })
                 .ConfigureRunner(rb => rb
                     .AddPostgres()
-                    .ScanIn(typeof(AddOutboxTable).Assembly).For.Migrations())
+                    .ScanIn().AssembliesForMigrations(assembliesWithMigrationModels))
                 .AddScoped<IVersionTableMetaData, VersionTable>()
                 .AddLogging(lb => lb.AddFluentMigratorConsole());
+        }
+
+        private static IScanInBuilder AssembliesForMigrations(this IScanInBuilder scanInBuilder, IEnumerable<Assembly> assembliesWithMigrationModels)
+        {
+            foreach (var assemblyWithMigrationModels in assembliesWithMigrationModels)
+            {
+                scanInBuilder.ScanIn(assemblyWithMigrationModels).For.Migrations();
+            }
+            return scanInBuilder;
         }
     }
 }

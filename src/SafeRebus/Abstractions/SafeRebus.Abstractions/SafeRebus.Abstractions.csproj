@@ -12,8 +12,4 @@
       <PackageReference Include="Rebus.RabbitMQ" Version="5.0.0-b02" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Contracts\SafeRebus.Contracts\SafeRebus.Contracts.csproj" />
-    </ItemGroup>
-
 </Project>

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Abstractions;
-using SafeRebus.Contracts.Responses;
+using SafeRebus.MessageHandler.Abstractions;
+using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.TestUtilities;
 using Xunit;
 

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Extensions\SafeRebus.Extensions.Builder\SafeRebus.Extensions.Builder.csproj" />
+      <ProjectReference Include="..\SafeRebus.MessageHandler.Contracts\SafeRebus.MessageHandler.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

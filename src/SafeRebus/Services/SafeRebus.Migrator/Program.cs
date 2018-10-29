@@ -1,6 +1,6 @@
 ﻿using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Builder;
+using SafeRebus.MessageHandler.Builder;
 
 namespace SafeRebus.Migrator
 {
@@ -9,7 +9,7 @@ namespace SafeRebus.Migrator
         static void Main(string[] args)
         {
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebusMigration()
+                .ConfigureWithSafeRebusMessageHandlerMigration()
                 .BuildServiceProvider();
             
             using (var scope = provider.CreateScope())

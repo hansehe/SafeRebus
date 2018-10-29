@@ -1,0 +1,6 @@
+{
+  "outboxHost": {
+    "cleaningOutboxCyclePeriodSec": 10,
+    "cleanOldMessageIdsFromOutboxTimeThresholdSec": 30
+  }
+}

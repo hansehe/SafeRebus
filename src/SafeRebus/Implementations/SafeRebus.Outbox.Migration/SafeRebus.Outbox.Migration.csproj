@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
+      <ProjectReference Include="..\SafeRebus.Database\SafeRebus.Database.csproj" />
+      <ProjectReference Include="..\SafeRebus.Migration\SafeRebus.Migration.csproj" />
+      <ProjectReference Include="..\SafeRebus.Outbox.Database\SafeRebus.Outbox.Database.csproj" />
+    </ItemGroup>
+
+</Project>

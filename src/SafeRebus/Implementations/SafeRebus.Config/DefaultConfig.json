@@ -8,11 +8,6 @@
       "IncludeScopes": true
     }
   },
-  "host": {
-    "cleaningOutboxCyclePeriodSec": 10,
-    "cleanOldMessageIdsFromOutboxTimeThresholdSec": 30,
-    "requestsPerCycle": 10
-  },
   "rabbitMq": {
     "timeoutMs": 5000,
     "user": "rabbituser",

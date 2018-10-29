@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using SafeRebus.Builder;
+using SafeRebus.MessageHandler.Builder;
 
 namespace SafeRebus.OutboxCleaner.Service
 {
@@ -7,7 +7,7 @@ namespace SafeRebus.OutboxCleaner.Service
     {
         static void Main(string[] args)
         {
-            SafeRebusHostBuilder.BuildSafeRebusOutboxCleanerHost()
+            SafeRebusMessageHandlerHostBuilder.BuildSafeRebusOutboxCleanerHost()
                 .Run();
         }
     }

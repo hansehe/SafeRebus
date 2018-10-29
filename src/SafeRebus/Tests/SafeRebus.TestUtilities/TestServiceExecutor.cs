@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SafeRebus.Abstractions;
-using SafeRebus.Builder;
+using SafeRebus.MessageHandler.Builder;
 
 namespace SafeRebus.TestUtilities
 {
@@ -68,7 +68,7 @@ namespace SafeRebus.TestUtilities
             var overrideConfig = OverrideConfig.GetOverrideConfig();
             overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebus(overrideConfig)
+                .ConfigureWithSafeRebusMessageHandler(overrideConfig)
                 .BuildServiceProvider();
             return provider;
         }
@@ -78,7 +78,7 @@ namespace SafeRebus.TestUtilities
             var overrideConfig = OverrideConfig.GetOverrideConfig();
             overrideConfig["database:schema"] = schema;
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebusOutboxCleaner(overrideConfig)
+                .ConfigureWithSafeRebusOutboxCleanerForMessageHandler(overrideConfig)
                 .BuildServiceProvider();
             return provider;
         }
@@ -89,7 +89,7 @@ namespace SafeRebus.TestUtilities
             overrideConfig["rabbitMq:inputQueue"] = outputQueue;
             overrideConfig["rabbitMq:outputQueue"] = outputQueue;
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebusSpammer(overrideConfig)
+                .ConfigureWithSafeRebusMessageSpammer(overrideConfig)
                 .BuildServiceProvider();
             return provider;
         }
@@ -97,7 +97,7 @@ namespace SafeRebus.TestUtilities
         public static IServiceProvider GetMigrationServiceProvider()
         {
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebusMigration(OverrideConfig.GetOverrideConfig())
+                .ConfigureWithSafeRebusMessageHandlerMigration(OverrideConfig.GetOverrideConfig())
                 .BuildServiceProvider();
             return provider;
         }

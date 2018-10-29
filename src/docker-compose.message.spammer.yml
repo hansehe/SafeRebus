@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  saferebus-message-spammer-service-1: &saferebus-spammer-service
+    image: saferebus.message.spammer.service
+    build:
+      context: .
+      dockerfile: SafeRebus/Services/SafeRebus.MessageSpammer.Service/Dockerfile
+    env_file:
+      - test.env
+    networks:
+      - backend_network
+
+  saferebus-spammer-service-2:
+    <<: *saferebus-spammer-service
+
+  saferebus-spammer-service-3:
+    <<: *saferebus-spammer-service
+
+  saferebus-spammer-service-4:
+    <<: *saferebus-spammer-service
+
+networks:
+  backend_network:
+    external: true

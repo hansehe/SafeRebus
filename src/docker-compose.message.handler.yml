@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  saferebus-message-handler-service-1: &saferebus-service
+    image: saferebus.message.handler.service
+    build:
+      context: .
+      dockerfile: SafeRebus/Services/SafeRebus.MessageHandler.Service/Dockerfile
+    env_file:
+      - test.env
+    networks:
+      - backend_network
+
+  saferebus-service-2:
+    <<: *saferebus-service
+    environment:
+      - USE_JOKER_EXCEPTIONS=true
+      - JOKER_EXCEPTION_PROBABILITY_PERCENT=1
+
+networks:
+  backend_network:
+    external: true

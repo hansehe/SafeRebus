@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Implementations\SafeRebus.Builder\SafeRebus.Builder.csproj" />
+      <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Builder\SafeRebus.MessageHandler.Builder.csproj" />
     </ItemGroup>
 
 </Project>
