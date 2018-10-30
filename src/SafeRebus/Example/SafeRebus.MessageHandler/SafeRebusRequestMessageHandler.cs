@@ -6,7 +6,7 @@ using Rebus.Handlers;
 using SafeRebus.MessageHandler.Contracts.Requests;
 using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.MessageHandler.Utilities;
-using SafeRebus.Utilities;
+using SafeRebus.Outbox.Abstractions;
 
 namespace SafeRebus.MessageHandler
 {
@@ -17,7 +17,7 @@ namespace SafeRebus.MessageHandler
 
         public SafeRebusRequestMessageHandler(
             ILogger<SafeRebusRequestMessageHandler> logger,
-            IBus bus)
+            IOutboxBus bus)
         {
             Logger = logger;
             Bus = bus;

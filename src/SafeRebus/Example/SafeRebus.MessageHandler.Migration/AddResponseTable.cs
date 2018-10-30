@@ -19,7 +19,7 @@ namespace SafeRebus.MessageHandler.Migration
         {
             var schema = Configuration.GetDbSchema();
             Create.Table(Tables.ResponseTable).InSchema(schema)
-                .WithColumn(SafeRebus.Database.Columns.Id).AsGuid().PrimaryKey()
+                .WithColumn(SafeRebus.Database.CommonColumns.Id).AsGuid().PrimaryKey()
                 .WithColumn(Columns.Response).AsString();
         }
 

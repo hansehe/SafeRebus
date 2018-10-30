@@ -10,8 +10,9 @@ namespace SafeRebus.RebusSteps
         {
             // The steps are executed in the order they are registered.
             return configurer
-                .HandleDbTransaction()
-                .HandleMessageWithOutboxPattern();
+                .HandleMessageInOutboxTransaction()
+                .HandleMessageInDatabaseTransaction()
+                .HandleMessageWithOutboxDuplicationFilter();
         }
     }
 }

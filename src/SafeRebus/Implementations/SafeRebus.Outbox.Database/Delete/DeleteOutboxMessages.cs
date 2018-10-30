@@ -1,20 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
-using SafeRebus.MessageHandler.Contracts.Responses;
 
-namespace SafeRebus.MessageHandler.Database.Select
+namespace SafeRebus.Outbox.Database.Delete
 {
-    public static class SelectResponses
+    public static class DeleteOutboxMessages
     {
-        private const string SqlTemplate = "SELECT * FROM {0}.{1} WHERE id IN ({2})";
+        private const string SqlTemplate = "DELETE FROM {0}.{1} WHERE id IN ({2})";
         
-        public static Task<IEnumerable<SafeRebusResponse>> Select(
+        public static Task Delete(
             IDbConnection dbConnection,
             IConfiguration configuration,
             Guid[] ids)
@@ -29,9 +28,9 @@ namespace SafeRebus.MessageHandler.Database.Select
             }
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
-                Tables.ResponseTable,
+                Tables.OutgoingMessagesTable,
                 parameters);
-            return dbConnection.QueryAsync<SafeRebusResponse>(sql, @params);
+            return dbConnection.ExecuteAsync(sql, @params);
         }
     }
 }

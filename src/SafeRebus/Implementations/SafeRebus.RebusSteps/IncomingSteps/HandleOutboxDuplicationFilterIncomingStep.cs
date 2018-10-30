@@ -8,15 +8,16 @@ using SafeRebus.Outbox.Abstractions;
 
 namespace SafeRebus.RebusSteps.IncomingSteps
 {
-    public class HandleOutboxIncomingStep : IIncomingStep
+    public class HandleOutboxDuplicationFilterIncomingStep : IIncomingStep
     {
         public async Task Process(IncomingStepContext context, Func<Task> next)
         {
             var scope = context.Load<IServiceScope>(SafeRebusContextTags.ScopeContextTag);
-            var outboxRepository = scope.ServiceProvider.GetService<IOutboxRepository>();
-            var messageId = context.Load<TransportMessage>().Headers[Headers.MessageId];
+            var outboxDuplicationFilterRepository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
+            var transportMessage = context.Load<TransportMessage>();
+            var messageId = transportMessage.Headers[Headers.MessageId];
             var messageGuidId = Guid.Parse(messageId);
-            if (await outboxRepository.TryInsertMessageId(messageGuidId))
+            if (await outboxDuplicationFilterRepository.TryInsertMessageId(messageGuidId))
             {
                 await next();
             }

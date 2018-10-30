@@ -5,7 +5,7 @@ using Rebus.Pipeline.Receive;
 
 namespace SafeRebus.RebusSteps.StepExtensions
 {
-    public static class CommonConfigurationExtension
+    public static class CommonConfigurationExtensions
     {
         public static OptionsConfigurer RegisterIncomingStep(this OptionsConfigurer configurer, 
             IIncomingStep stepToInject, 

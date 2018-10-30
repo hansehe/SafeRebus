@@ -6,9 +6,10 @@ namespace SafeRebus.Outbox.Config
     public static class OutboxConfig
     {
         private const long DefaultCleaningOutboxTimerPeriodSec = 10;
-        private const long DefaultCleanOldMessageIdsFromOutboxTimeThresholdSec = 30;
+        private const long DefaultCleanOldMessageIdsFromDuplicationFilterTimeThresholdSec = 30;
+        private const long DefaultCleanOutboxMessagesTimeThresholdSec = 5;
         
-        public static TimeSpan GetOutboxCleaningOutboxCyclePeriod(this IConfiguration configuration)
+        public static TimeSpan GetCleaningOutboxCyclePeriod(this IConfiguration configuration)
         {
             if (!long.TryParse(configuration["outboxHost:cleaningOutboxCyclePeriodSec"], out var period))
             {
@@ -19,11 +20,22 @@ namespace SafeRebus.Outbox.Config
             return timespanPeriod;
         }
         
-        public static TimeSpan GetOutboxCleanOldMessageIdsFromOutboxTimeThreshold(this IConfiguration configuration)
+        public static TimeSpan GetCleanOldMessageIdsFromDuplicationFilterTimeThreshold(this IConfiguration configuration)
         {
-            if (!long.TryParse(configuration["outboxHost:timeThresholdSecForCleaningOutbox"], out var threshold))
+            if (!long.TryParse(configuration["outboxHost:timeThresholdSecForCleaningOutboxDuplicationFilter"], out var threshold))
             {
-                threshold = DefaultCleanOldMessageIdsFromOutboxTimeThresholdSec;
+                threshold = DefaultCleanOldMessageIdsFromDuplicationFilterTimeThresholdSec;
+            }
+
+            var timespanThreshold = TimeSpan.FromSeconds(threshold);
+            return timespanThreshold;
+        }
+        
+        public static TimeSpan GetCleanOutboxMessagesTimeThreshold(this IConfiguration configuration)
+        {
+            if (!long.TryParse(configuration["outboxHost:timeThresholdSecForCleaningOutboxMessages"], out var threshold))
+            {
+                threshold = DefaultCleanOutboxMessagesTimeThresholdSec;
             }
 
             var timespanThreshold = TimeSpan.FromSeconds(threshold);

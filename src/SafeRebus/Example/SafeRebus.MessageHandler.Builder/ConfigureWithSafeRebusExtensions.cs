@@ -23,14 +23,14 @@ namespace SafeRebus.MessageHandler.Builder
         {
             return serviceCollection
                 .ConfigureWithSafeRebusMigration(GetMigrationAssemblies())
-                .UseSafeRebusConfiguration();
+                .UseSafeRebusConfiguration(overrideConfig);
         }
         
-        public static IServiceCollection ConfigureWithSafeRebusOutboxCleanerForMessageHandler(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
+        public static IServiceCollection ConfigureWithSafeRebusOutboxCleanerHost(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
-            return serviceCollection
-                .ConfigureWithSafeRebusOutboxCleaner()
-                .UseSafeRebusConfiguration()
+            return Extensions.Builder.ConfigureWithSafeRebusExtensions
+                .ConfigureWithSafeRebusOutboxCleanerHost(serviceCollection)
+                .UseSafeRebusConfiguration(overrideConfig)
                 .UseDefaultLogging();
         }
         

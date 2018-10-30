@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rebus.Bus;
 using SafeRebus.Outbox.Abstractions;
 
 namespace SafeRebus.Outbox.Bus
@@ -8,7 +9,7 @@ namespace SafeRebus.Outbox.Bus
         public static IServiceCollection Register(IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddScoped<IOutboxBus, OutboxBus>();
+                    .AddScoped<IOutboxBus, OutboxBus>();
         }
     }
 }

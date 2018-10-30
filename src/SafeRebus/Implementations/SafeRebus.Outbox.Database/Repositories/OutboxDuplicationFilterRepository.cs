@@ -10,14 +10,14 @@ using SafeRebus.Outbox.Database.Select;
 
 namespace SafeRebus.Outbox.Database.Repositories
 {
-    public class OutboxRepository : IOutboxRepository
+    public class OutboxDuplicationFilterRepository : IOutboxDuplicationFilterRepository
     {
         private readonly ILogger Logger;
         private readonly IConfiguration Configuration;
         private readonly IDbProvider DbProvider;
 
-        public OutboxRepository(
-            ILogger<OutboxRepository> logger,
+        public OutboxDuplicationFilterRepository(
+            ILogger<OutboxDuplicationFilterRepository> logger,
             IConfiguration configuration,
             IDbProvider dbProvider)
         {
@@ -63,7 +63,7 @@ namespace SafeRebus.Outbox.Database.Repositories
         {
             Logger.LogDebug($"Deleting all old message ids older then: {tooOldThreshold.ToString()}");
             return DeleteMessageIdsFromTimestamp.Delete(
-                DbProvider.GetDbTransaction().Connection,
+                DbProvider.GetDbConnection(),
                 Configuration,
                 tooOldThreshold);
         }

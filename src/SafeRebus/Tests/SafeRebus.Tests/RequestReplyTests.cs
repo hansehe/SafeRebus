@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using SafeRebus.Config;
 using SafeRebus.MessageHandler.Abstractions;
+using SafeRebus.MessageHandler.Contracts.Requests;
 using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.TestUtilities;
 
@@ -26,7 +27,7 @@ namespace SafeRebus.Tests
             {
                 var bus = scope.ServiceProvider.GetService<IBus>();
                 var repository = scope.ServiceProvider.GetService<IResponseRepository>();
-                var request = new SafeRebusResponse();
+                var request = new SafeRebusRequest();
                 await bus.Send(request);
                 await MessageHandler.Utilities.Tools.WaitUntilSuccess(async () =>
                 {

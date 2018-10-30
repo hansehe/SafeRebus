@@ -2,6 +2,7 @@ using FluentMigrator;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
 using SafeRebus.Database;
+using SafeRebus.Outbox.Database;
 
 namespace SafeRebus.Outbox.Migration
 {
@@ -18,15 +19,23 @@ namespace SafeRebus.Outbox.Migration
         public override void Up()
         {
             var schema = Configuration.GetDbSchema();
-            Create.Table(Tables.OutboxTable).InSchema(schema)
-                .WithColumn(Columns.Id).AsGuid().PrimaryKey()
-                .WithColumn(Database.Columns.Timestamp).AsDateTime().WithDefault(SystemMethods.CurrentUTCDateTime);
+            
+            Create.Table(Tables.DuplicationFilterTable).InSchema(schema)
+                .WithColumn(CommonColumns.Id).AsGuid().PrimaryKey()
+                .WithColumn(Columns.Timestamp).AsDateTime().WithDefault(SystemMethods.CurrentUTCDateTime).Indexed();
+
+            Create.Table(Tables.OutgoingMessagesTable).InSchema(schema)
+                .WithColumn(CommonColumns.Id).AsGuid().PrimaryKey()
+                .WithColumn(Columns.OutgoingMessageObject).AsBinary()
+                .WithColumn(Columns.OutgoingMessageHeaders).AsBinary()
+                .WithColumn(Columns.OutgoingSendFunction).AsString()
+                .WithColumn(Columns.Timestamp).AsDateTime().WithDefault(SystemMethods.CurrentUTCDateTime).Indexed();
         }
 
         public override void Down()
         {
             var schema = Configuration.GetDbSchema();
-            Delete.Table(Tables.OutboxTable).InSchema(schema);
+            Delete.Table(Tables.DuplicationFilterTable).InSchema(schema);
         }
     }
 }

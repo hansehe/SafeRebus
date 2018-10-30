@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SafeRebus.Outbox.Abstractions
 {
-    public interface IOutboxRepository
+    public interface IOutboxDuplicationFilterRepository
     {
         Task<bool> TryInsertMessageId(Guid id);
         Task InsertMessageId(Guid id);

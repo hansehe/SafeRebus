@@ -16,7 +16,7 @@ namespace SafeRebus.TestUtilities
                 {"rabbitMq:inputQueue", randomQueue},
                 {"rabbitMq:outputQueue", randomQueue},
                 {"database:schema", randomSchema},
-                {"host:requestsPerCycle", 50.ToString()},
+                {"host:requestsPerCycle", 10.ToString()},
             };
 
             JokerExceptionsConfig.UseJokerExceptions = true;

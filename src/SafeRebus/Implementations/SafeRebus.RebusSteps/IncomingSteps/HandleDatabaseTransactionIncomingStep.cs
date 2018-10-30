@@ -7,7 +7,7 @@ using SafeRebus.Config;
 
 namespace SafeRebus.RebusSteps.IncomingSteps
 {
-    public class HandleDbTransactionIncomingStep : IIncomingStep
+    public class HandleDatabaseTransactionIncomingStep : IIncomingStep
     {
         public async Task Process(IncomingStepContext context, Func<Task> next)
         {

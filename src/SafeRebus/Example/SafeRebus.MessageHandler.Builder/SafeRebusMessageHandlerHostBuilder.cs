@@ -14,7 +14,7 @@ namespace SafeRebus.MessageHandler.Builder
         public static IHost BuildSafeRebusOutboxCleanerHost()
         {
             return new HostBuilder()
-                .ConfigureServices(serviceCollection => serviceCollection.ConfigureWithSafeRebusOutboxCleanerForMessageHandler())
+                .ConfigureServices(serviceCollection => serviceCollection.ConfigureWithSafeRebusOutboxCleanerHost())
                 .Build();
         }
         

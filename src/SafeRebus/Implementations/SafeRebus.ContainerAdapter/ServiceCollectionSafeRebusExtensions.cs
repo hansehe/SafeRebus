@@ -5,9 +5,8 @@ using Rebus.Activation;
 using Rebus.Bus;
 using Rebus.Config;
 using Rebus.Pipeline;
-using SafeRebus.ContainerAdapter;
 
-namespace SafeRebus.Extensions.Builder
+namespace SafeRebus.ContainerAdapter
 {
     public static class ServiceCollectionSafeRebusExtensions
     {

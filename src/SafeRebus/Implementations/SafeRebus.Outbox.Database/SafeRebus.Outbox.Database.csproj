@@ -8,6 +8,7 @@
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Outbox.Abstractions\SafeRebus.Outbox.Abstractions.csproj" />
       <ProjectReference Include="..\SafeRebus.Config\SafeRebus.Config.csproj" />
+      <ProjectReference Include="..\SafeRebus.Database\SafeRebus.Database.csproj" />
     </ItemGroup>
 
     <ItemGroup>

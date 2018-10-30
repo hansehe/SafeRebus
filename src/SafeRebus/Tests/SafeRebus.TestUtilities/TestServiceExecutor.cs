@@ -78,7 +78,7 @@ namespace SafeRebus.TestUtilities
             var overrideConfig = OverrideConfig.GetOverrideConfig();
             overrideConfig["database:schema"] = schema;
             var provider = new ServiceCollection()
-                .ConfigureWithSafeRebusOutboxCleanerForMessageHandler(overrideConfig)
+                .ConfigureWithSafeRebusOutboxCleanerHost(overrideConfig)
                 .BuildServiceProvider();
             return provider;
         }

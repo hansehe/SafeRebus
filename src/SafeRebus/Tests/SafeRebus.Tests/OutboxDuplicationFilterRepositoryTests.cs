@@ -11,14 +11,14 @@ using Xunit;
 namespace SafeRebus.Tests
 {
     [Collection(TestCollectionFixtures.CollectionTag)]
-    public class OutboxRepositoryTests
+    public class OutboxDuplicationFilterRepositoryTests
     {
         [Fact]
         public Task InsertAndCheckExists_Success()
         {
             return TestServiceExecutor.ExecuteInDbTransactionScopeWithRollback(async scope =>
             {
-                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 var id = Guid.NewGuid();
                 await repository.InsertMessageId(id);
                 (await repository.MessageIdExists(id)).Should().BeTrue();
@@ -30,7 +30,7 @@ namespace SafeRebus.Tests
         {
             return TestServiceExecutor.ExecuteInDbTransactionScopeWithRollback(async scope =>
             {
-                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 var id = Guid.NewGuid();
                 (await repository.TryInsertMessageId(id)).Should().BeTrue();
                 (await repository.TryInsertMessageId(id)).Should().BeFalse();
@@ -44,7 +44,7 @@ namespace SafeRebus.Tests
             var saveIdsShouldNotBeDeleted = new List<Guid>();
             await TestServiceExecutor.ExecuteInScope(async scope =>
             {
-                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
                 for (var i = 0; i < 10; i++)
                 {
@@ -57,7 +57,7 @@ namespace SafeRebus.Tests
             await Task.Delay(TimeSpan.FromSeconds(2));
             await TestServiceExecutor.ExecuteInScope(async scope =>
             {
-                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
                 for (var i = 0; i < 10; i++)
                 {
@@ -69,7 +69,7 @@ namespace SafeRebus.Tests
             });
             await TestServiceExecutor.ExecuteInScope(async scope =>
             {
-                var repository = scope.ServiceProvider.GetService<IOutboxRepository>();
+                var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 await repository.CleanOldMessageIds(TimeSpan.FromSeconds(1.5));
                 foreach (var savedId in savedIds)
                 {

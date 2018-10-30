@@ -2,7 +2,6 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SafeRebus.Outbox.Cleaner.Host;
 using SafeRebus.Outbox.Migration;
 
 namespace SafeRebus.Extensions.Builder
@@ -13,9 +12,10 @@ namespace SafeRebus.Extensions.Builder
         {
             return serviceCollection
                 .ConfigureWith(Database.ServiceRegistration.Register)
-                .ConfigureWith(Outbox.Database.ServiceRegistration.Register)
+                .ConfigureWith(Utilities.ServiceRegistration.Register)
                 .ConfigureWith(Outbox.Bus.ServiceRegistration.Register)
-                .ConfigureWith(Utilities.ServiceRegistration.Register);
+                .ConfigureWith(Outbox.Database.ServiceRegistration.Register)
+                .ConfigureWith(Outbox.Cleaner.ServiceRegistration.Register);
         }
         
         public static IServiceCollection ConfigureWithSafeRebusMigration(this IServiceCollection serviceCollection, 
@@ -29,12 +29,11 @@ namespace SafeRebus.Extensions.Builder
                 .ConfigureWith(Outbox.Database.ServiceRegistration.Register);
         }
         
-        public static IServiceCollection ConfigureWithSafeRebusOutboxCleaner(this IServiceCollection serviceCollection)
+        public static IServiceCollection ConfigureWithSafeRebusOutboxCleanerHost(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .ConfigureWith(ServiceRegistration.Register)
-                .ConfigureWith(Database.ServiceRegistration.Register)
-                .ConfigureWith(Outbox.Database.ServiceRegistration.Register);
+                .ConfigureWithSafeRebus()
+                .ConfigureWith(Outbox.Cleaner.Host.ServiceRegistration.Register);
         }
 
         public static IConfigurationBuilder AddDefaultSafeRebusConfiguration(this IConfigurationBuilder configurationBuilder)

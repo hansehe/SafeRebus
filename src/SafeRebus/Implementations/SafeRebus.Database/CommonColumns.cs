@@ -1,6 +1,6 @@
 namespace SafeRebus.Database
 {
-    public static class Columns
+    public static class CommonColumns
     {
         public const string Id = "id";
     }

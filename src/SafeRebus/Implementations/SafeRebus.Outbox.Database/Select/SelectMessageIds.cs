@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using SafeRebus.Config;
+using SafeRebus.Database;
 
 namespace SafeRebus.Outbox.Database.Select
 {
@@ -18,10 +19,10 @@ namespace SafeRebus.Outbox.Database.Select
             Guid id)
         {
             var @params = new DynamicParameters();
-            @params.Add(Columns.Id, id);
+            @params.Add(CommonColumns.Id, id);
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
-                Tables.OutboxTable);
+                Tables.DuplicationFilterTable);
             return dbConnection.QueryAsync<Guid>(sql, @params);
         }
     }

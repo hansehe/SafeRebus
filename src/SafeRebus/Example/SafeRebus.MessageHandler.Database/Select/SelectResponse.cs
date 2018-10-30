@@ -18,10 +18,10 @@ namespace SafeRebus.MessageHandler.Database.Select
             Guid id)
         {
             var @params = new DynamicParameters();
-            @params.Add(SafeRebus.Database.Columns.Id, id);
+            @params.Add(SafeRebus.Database.CommonColumns.Id, id);
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
-                SafeRebus.MessageHandler.Database.Tables.ResponseTable);
+                Tables.ResponseTable);
             return dbConnection.QuerySingleAsync<SafeRebusResponse>(sql, @params);
         }
     }

@@ -3,6 +3,7 @@ using Rebus.Config;
 using Rebus.Handlers;
 using Rebus.Routing.TypeBased;
 using SafeRebus.Abstractions;
+using SafeRebus.ContainerAdapter;
 using SafeRebus.Extensions.Builder;
 using SafeRebus.MessageHandler.Contracts.Requests;
 using SafeRebus.MessageHandler.Contracts.Responses;

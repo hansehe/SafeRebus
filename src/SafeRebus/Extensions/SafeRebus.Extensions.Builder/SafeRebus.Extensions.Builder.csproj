@@ -12,6 +12,7 @@
       <ProjectReference Include="..\..\Implementations\SafeRebus.Database\SafeRebus.Database.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.Migration\SafeRebus.Migration.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.Outbox.Bus\SafeRebus.Outbox.Bus.csproj" />
+      <ProjectReference Include="..\..\Implementations\SafeRebus.Outbox.Cleaner\SafeRebus.Outbox.Cleaner.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.RebusSteps\SafeRebus.RebusSteps.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.Utilities\SafeRebus.Utilities.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.Outbox.Cleaner.Host\SafeRebus.Outbox.Cleaner.Host.csproj" />

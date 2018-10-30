@@ -17,11 +17,11 @@ namespace SafeRebus.MessageHandler.Database.Insert
             SafeRebusResponse response)
         {
             var @params = new DynamicParameters();
-            @params.Add(SafeRebus.Database.Columns.Id, response.Id);
+            @params.Add(SafeRebus.Database.CommonColumns.Id, response.Id);
             @params.Add(SafeRebus.MessageHandler.Database.Columns.Response, response.Response);
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
-                SafeRebus.MessageHandler.Database.Tables.ResponseTable);
+                Tables.ResponseTable);
             return dbConnection.ExecuteAsync(sql, @params);
         }
     }

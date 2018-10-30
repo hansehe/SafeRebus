@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Rebus.Bus;
 using SafeRebus.Abstractions;
 using SafeRebus.Outbox.Abstractions;
 using SafeRebus.Outbox.Config;
@@ -46,21 +47,32 @@ namespace SafeRebus.Outbox.Cleaner.Host
 
         private Task Run(CancellationToken cancellationToken)
         {
-            var triggerCycle = Configuration.GetOutboxCleaningOutboxCyclePeriod();
+            var triggerCycle = Configuration.GetCleaningOutboxCyclePeriod();
             Logger.LogInformation($"Starting clean outbox which cleans the outbox every: {triggerCycle.ToString()}.");
             return Tools.TriggerEveryCycle(CleanOutbox, triggerCycle, cancellationToken);
         }
         
         private async Task CleanOutbox()
         {
+            await CleanOutboxDuplicationFilter();
+            await CleanOutboxMessages();
+        }
+
+        private async Task CleanOutboxDuplicationFilter()
+        {
             using (var scope = ServiceProvider.CreateScope())
             {
-                var threshold = Configuration.GetOutboxCleanOldMessageIdsFromOutboxTimeThreshold();
-                Logger.LogInformation($"Cleaning outbox of message ids older then: {threshold.ToString()}.");
-                var outboxRepository = scope.ServiceProvider.GetService<IOutboxRepository>();
-                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
-                await outboxRepository.CleanOldMessageIds(threshold);
-                dbProvider.GetDbTransaction().Commit();
+                var outboxCleaner = scope.ServiceProvider.GetService<IOutboxDuplicationFilterCleaner>();
+                await outboxCleaner.CleanMessageIds();
+            }
+        }
+        
+        private async Task CleanOutboxMessages()
+        {
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                var outboxCleaner = scope.ServiceProvider.GetService<IOutboxMessageCleaner>();
+                await outboxCleaner.CleanMessages();
             }
         }
     }

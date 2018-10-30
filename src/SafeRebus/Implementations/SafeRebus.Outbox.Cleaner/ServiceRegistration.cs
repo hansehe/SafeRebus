@@ -1,16 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SafeRebus.Outbox.Abstractions;
-using SafeRebus.Outbox.Database.Repositories;
 
-namespace SafeRebus.Outbox.Database
+namespace SafeRebus.Outbox.Cleaner
 {
     public static class ServiceRegistration
     {
         public static IServiceCollection Register(IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddScoped<IOutboxMessageRepository, OutboxMessageRepository>()
-                .AddScoped<IOutboxDuplicationFilterRepository, OutboxDuplicationFilterRepository>();
+                .AddScoped<IOutboxDuplicationFilterCleaner, OutboxDuplicationFilterCleaner>()
+                .AddScoped<IOutboxMessageCleaner, OutboxMessageCleaner>();
         }
     }
 }
