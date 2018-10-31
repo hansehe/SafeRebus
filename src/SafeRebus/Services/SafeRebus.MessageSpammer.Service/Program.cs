@@ -9,7 +9,7 @@ namespace SafeRebus.MessageSpammer.Service
     {
         static void Main(string[] args)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(10)); // Wait for other services to create queue
+            Thread.Sleep(TimeSpan.FromSeconds(5)); // Wait for other services to create queue
             SafeRebusMessageHandlerHostBuilder.BuildSafeRebusSpammerHost()
                 .Run();
         }
