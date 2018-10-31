@@ -1,6 +1,6 @@
 {
   "outboxHost": {
-    "cleaningOutboxCyclePeriodSec": 10,
+    "cleaningOutboxCyclePeriodSec": 2,
     "timeThresholdSecForCleaningOutboxDuplicationFilter": 30,
     "timeThresholdSecForCleaningOutboxMessages": 5
   }

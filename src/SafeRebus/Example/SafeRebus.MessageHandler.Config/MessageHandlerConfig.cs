@@ -5,6 +5,8 @@ namespace SafeRebus.MessageHandler.Config
 {
     public static class MessageHandlerConfig
     {
+        public const string DefaultMessageHandlerConfigFilename = "DefaultMessageHandlerConfig.json";
+        
         private const int DefaultRequestsPerCycle = 10;
         
         public static int GetHostRequestsPerCycle(this IConfiguration configuration)

@@ -40,6 +40,7 @@ namespace SafeRebus.Extensions.Builder
         {
             return configurationBuilder
                 .AddJsonFile(Config.BaseConfig.DefaultConfigFilename)
+                .AddJsonFile(Outbox.Config.OutboxConfig.DefaultOutboxConfigFilename)
                 .AddJsonFileIfTrue(Config.BaseConfig.DefaultConfigDockerFilename, () => Config.BaseConfig.InContainer);
         }
 

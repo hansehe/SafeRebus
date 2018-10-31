@@ -61,6 +61,7 @@ namespace SafeRebus.MessageHandler.Builder
         {
             return serviceCollection.AddScoped<IConfiguration>(serviceProvider => new ConfigurationBuilder()
                 .AddDefaultSafeRebusConfiguration()
+                .AddJsonFile(Config.MessageHandlerConfig.DefaultMessageHandlerConfigFilename)
                 .AddInMemoryIfTrue(overrideConfig, () => overrideConfig != null)
                 .Build());
         }

@@ -8,4 +8,10 @@
       <ProjectReference Include="..\..\Implementations\SafeRebus.Config\SafeRebus.Config.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="DefaultMessageHandlerConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
