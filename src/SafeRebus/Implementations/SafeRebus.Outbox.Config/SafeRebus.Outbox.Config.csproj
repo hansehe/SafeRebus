@@ -8,4 +8,10 @@
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Outbox.Abstractions\SafeRebus.Outbox.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="DefaultOutboxConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

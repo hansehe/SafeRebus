@@ -5,7 +5,9 @@ namespace SafeRebus.Outbox.Config
 {
     public static class OutboxConfig
     {
-        private const long DefaultCleaningOutboxTimerPeriodSec = 10;
+        public const string DefaultOutboxConfigFilename = "DefaultOutboxConfig.json";
+        
+        private const long DefaultCleaningOutboxTimerPeriodSec = 2;
         private const long DefaultCleanOldMessageIdsFromDuplicationFilterTimeThresholdSec = 30;
         private const long DefaultCleanOutboxMessagesTimeThresholdSec = 5;
         
