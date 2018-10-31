@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +12,9 @@ namespace SafeRebus.TestUtilities
 {
     public static class TestServiceExecutor
     {
-        public static async Task ExecuteInScope(Func<IServiceScope, Task> action, string inputQueue = null, string outputQueue = null)
+        public static async Task ExecuteInScope(Func<IServiceScope, Task> action, Dictionary<string, string> additionalOverrideConfig = null)
         {
-            var provider = GetServiceProvider(inputQueue, outputQueue);
+            var provider = GetServiceProvider(additionalOverrideConfig);
             using (var scope = provider.CreateScope())
             {
                 try
@@ -63,19 +65,11 @@ namespace SafeRebus.TestUtilities
             });
         }
         
-        public static IServiceProvider GetServiceProvider(string inputQueue = null, string outputQueue = null)
+        public static IServiceProvider GetServiceProvider(Dictionary<string, string> additionalOverrideConfig = null)
         {
             var overrideConfig = OverrideConfig.GetOverrideConfig();
-            outputQueue = outputQueue ?? inputQueue;
-            if (inputQueue != null)
-            {
-                overrideConfig["rabbitMq:inputQueue"] = inputQueue;
-            }
-            if (outputQueue != null)
-            {
-                overrideConfig["rabbitMq:outputQueue"] = outputQueue;
-            }
             overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
+            additionalOverrideConfig?.ToList().ForEach(x => overrideConfig[x.Key] = x.Value);
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebusMessageHandler(overrideConfig)
                 .BuildServiceProvider();
