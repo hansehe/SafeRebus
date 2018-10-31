@@ -58,6 +58,7 @@ namespace SafeRebus.Outbox.Bus
                 case nameof(Defer):
                     return Bus.Defer(TimeSpan.Zero, outboxMessage.Message, outboxMessage.Headers);
                 case nameof(Reply):
+                    AssertReturnAddressExists(outboxMessage);
                     return Bus.Advanced.Routing.Send(outboxMessage.Headers[Headers.ReturnAddress], outboxMessage.Message, outboxMessage.Headers);
                 case nameof(Publish):
                     return Bus.Publish(outboxMessage.Message, outboxMessage.Headers);
@@ -168,6 +169,14 @@ namespace SafeRebus.Outbox.Bus
             if (!TransactionIsInitiated())
             {
                 throw new Exception("Outbox bus transaction is not initiated, please run 'BeginTransaction(..)'");
+            }
+        }
+
+        private void AssertReturnAddressExists(OutboxMessage outboxMessage)
+        {
+            if (!outboxMessage.Headers.ContainsKey(Headers.ReturnAddress))
+            {
+                throw new Exception($"Outbox message headers does not container a return address value with key: {Headers.ReturnAddress}");
             }
         }
 

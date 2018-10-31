@@ -66,6 +66,7 @@ namespace SafeRebus.TestUtilities
         public static IServiceProvider GetServiceProvider(string inputQueue = null, string outputQueue = null)
         {
             var overrideConfig = OverrideConfig.GetOverrideConfig();
+            outputQueue = outputQueue ?? inputQueue;
             if (inputQueue != null)
             {
                 overrideConfig["rabbitMq:inputQueue"] = inputQueue;
