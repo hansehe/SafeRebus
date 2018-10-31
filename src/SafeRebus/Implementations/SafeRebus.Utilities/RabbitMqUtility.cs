@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using SafeRebus.Abstractions;
 using SafeRebus.Config;
-using LogLevel = Rebus.Logging.LogLevel;
 
 namespace SafeRebus.Utilities
 {
@@ -46,7 +44,7 @@ namespace SafeRebus.Utilities
 
         public string OutputQueue => Configuration.GetRabbitMqOutputQueue();
 
-        public LogLevel LogLevel => Configuration.GetRabbitMqLogLevel();
+        public Rebus.Logging.LogLevel LogLevel => Configuration.GetRabbitMqLogLevel();
 
         private IConnectionFactory GetConnectionFactory() => new ConnectionFactory
         {

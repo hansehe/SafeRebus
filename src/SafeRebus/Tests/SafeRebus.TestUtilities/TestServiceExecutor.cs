@@ -12,9 +12,11 @@ namespace SafeRebus.TestUtilities
 {
     public static class TestServiceExecutor
     {
-        public static async Task ExecuteInScope(Func<IServiceScope, Task> action, Dictionary<string, string> additionalOverrideConfig = null)
+        public static async Task ExecuteInScope(Func<IServiceScope, Task> action, 
+            Dictionary<string, string> additionalOverrideConfig = null,
+            IServiceProvider provider = null)
         {
-            var provider = GetServiceProvider(additionalOverrideConfig);
+            provider = provider ?? GetServiceProvider(additionalOverrideConfig);
             using (var scope = provider.CreateScope())
             {
                 try

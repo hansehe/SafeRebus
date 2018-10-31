@@ -1,0 +1,6 @@
+{
+  "rabbitMq": {
+    "inputQueue": "NServiceBus.InputQueue",
+    "outputQueue": "SafeRebus.InputQueue"
+  }
+}
