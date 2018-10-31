@@ -27,7 +27,7 @@ namespace SafeRebus.Outbox.Cleaner
             Bus = bus;
         }
         
-        public async Task CleanMessages()
+        public async Task CleanMessages(bool ignoreAndLogExceptions = true)
         {
             var threshold = Configuration.GetCleanOutboxMessagesTimeThreshold();
             Logger.LogInformation($"Cleaning outbox of outgoing messages with ids older then: {threshold.ToString()}.");
@@ -42,6 +42,10 @@ namespace SafeRebus.Outbox.Cleaner
                 catch (Exception e)
                 {
                     Logger.LogError($"Could not resend outbox message with id: {outboxMessage.Id}. \r\nFollowing error occured: {e.Message}");
+                    if (!ignoreAndLogExceptions)
+                    {
+                        throw;
+                    }
                 }
             }
         }

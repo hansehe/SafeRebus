@@ -17,6 +17,7 @@ namespace SafeRebus.TestUtilities
                 {"rabbitMq:outputQueue", randomQueue},
                 {"database:schema", randomSchema},
                 {"host:requestsPerCycle", 10.ToString()},
+                {"outboxHost:timeThresholdSecForCleaningOutboxMessages", 1.ToString()}
             };
 
             JokerExceptionsConfig.UseJokerExceptions = true;

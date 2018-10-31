@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Rebus.Bus;
 using Rebus.Bus.Advanced;
 using Rebus.Messages;
+using Rebus.Transport;
 using SafeRebus.Outbox.Abstractions;
 using SafeRebus.Outbox.Abstractions.Entities;
 
@@ -49,17 +50,17 @@ namespace SafeRebus.Outbox.Bus
             switch (outboxMessage.SendFunction)
             {
                case nameof(SendLocal):
-                   return SendLocal(outboxMessage.Message, outboxMessage.Headers);
+                   return Bus.SendLocal(outboxMessage.Message, outboxMessage.Headers);
                case nameof(Send):
-                   return Send(outboxMessage.Message, outboxMessage.Headers);
+                   return Bus.Send(outboxMessage.Message, outboxMessage.Headers);
                case nameof(DeferLocal):
-                   return DeferLocal(TimeSpan.Zero, outboxMessage.Message, outboxMessage.Headers);
+                   return Bus.DeferLocal(TimeSpan.Zero, outboxMessage.Message, outboxMessage.Headers);
                 case nameof(Defer):
-                    return Defer(TimeSpan.Zero, outboxMessage.Message, outboxMessage.Headers);
+                    return Bus.Defer(TimeSpan.Zero, outboxMessage.Message, outboxMessage.Headers);
                 case nameof(Reply):
-                    return Reply(outboxMessage.Message, outboxMessage.Headers);
+                    return Bus.Advanced.Routing.Send(outboxMessage.Headers[Headers.ReturnAddress], outboxMessage.Message, outboxMessage.Headers);
                 case nameof(Publish):
-                    return Publish(outboxMessage.Message, outboxMessage.Headers);
+                    return Bus.Publish(outboxMessage.Message, outboxMessage.Headers);
                default:
                    throw new ArgumentException(
                        $"Could not resend outbox message due to unknown send function: {outboxMessage.SendFunction}");

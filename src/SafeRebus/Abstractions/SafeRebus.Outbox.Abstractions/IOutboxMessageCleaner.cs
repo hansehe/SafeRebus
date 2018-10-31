@@ -4,6 +4,6 @@ namespace SafeRebus.Outbox.Abstractions
 {
     public interface IOutboxMessageCleaner
     {
-        Task CleanMessages();
+        Task CleanMessages(bool ignoreAndLogExceptions = true);
     }
 }

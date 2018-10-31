@@ -10,9 +10,9 @@ namespace SafeRebus.TestUtilities
 {
     public static class TestServiceExecutor
     {
-        public static async Task ExecuteInScope(Func<IServiceScope, Task> action)
+        public static async Task ExecuteInScope(Func<IServiceScope, Task> action, string inputQueue = null, string outputQueue = null)
         {
-            var provider = GetServiceProvider();
+            var provider = GetServiceProvider(inputQueue, outputQueue);
             using (var scope = provider.CreateScope())
             {
                 try
@@ -63,9 +63,17 @@ namespace SafeRebus.TestUtilities
             });
         }
         
-        public static IServiceProvider GetServiceProvider()
+        public static IServiceProvider GetServiceProvider(string inputQueue = null, string outputQueue = null)
         {
             var overrideConfig = OverrideConfig.GetOverrideConfig();
+            if (inputQueue != null)
+            {
+                overrideConfig["rabbitMq:inputQueue"] = inputQueue;
+            }
+            if (outputQueue != null)
+            {
+                overrideConfig["rabbitMq:outputQueue"] = outputQueue;
+            }
             overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebusMessageHandler(overrideConfig)
