@@ -8,7 +8,7 @@ using SafeRebus.Outbox.Abstractions;
 using SafeRebus.TestUtilities;
 using Xunit;
 
-namespace SafeRebus.Tests
+namespace SafeRebus.Outbox.Tests
 {
     [Collection(TestCollectionFixtures.CollectionTag)]
     public class OutboxDuplicationFilterRepositoryTests
