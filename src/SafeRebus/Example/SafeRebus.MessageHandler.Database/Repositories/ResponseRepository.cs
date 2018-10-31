@@ -38,7 +38,7 @@ namespace SafeRebus.MessageHandler.Database.Repositories
         public Task<SafeRebusResponse> SelectResponse(Guid id)
         {
             Logger.LogDebug($"Selecting response with id: {id.ToString()}");
-            return SafeRebus.MessageHandler.Database.Select.SelectResponse.Select(
+            return Select.SelectResponse.Select(
                 DbProvider.GetDbTransaction().Connection,
                 Configuration,
                 id);
@@ -47,7 +47,7 @@ namespace SafeRebus.MessageHandler.Database.Repositories
         public Task<IEnumerable<SafeRebusResponse>> SelectResponses(IEnumerable<Guid> ids)
         {
             Logger.LogDebug($"Selecting multiple responses");
-            return SafeRebus.MessageHandler.Database.Select.SelectResponses.Select(
+            return Select.SelectResponses.Select(
                 DbProvider.GetDbTransaction().Connection,
                 Configuration,
                 ids.ToArray());

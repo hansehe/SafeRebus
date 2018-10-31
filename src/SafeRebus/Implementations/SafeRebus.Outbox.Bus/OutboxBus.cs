@@ -70,37 +70,57 @@ namespace SafeRebus.Outbox.Bus
 
         public Task SendLocal(object commandMessage, Dictionary<string, string> optionalHeaders = null)
         {
-            var funcToCommit = new Func<Task>(() => Bus.SendLocal(commandMessage, optionalHeaders));
+            Func<Task> funcToCommit = () => Bus.SendLocal(commandMessage, optionalHeaders);
+            if (!TransactionIsInitiated())
+            {
+                return funcToCommit.Invoke();
+            }
             const string sendFunction = nameof(SendLocal);
-            return SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(funcToCommit, sendFunction, commandMessage, optionalHeaders);
+            return SaveOutboxMessage(funcToCommit, sendFunction, commandMessage, optionalHeaders);
         }
 
         public Task Send(object commandMessage, Dictionary<string, string> optionalHeaders = null)
         {
-            var funcToCommit = new Func<Task>(() => Bus.Send(commandMessage, optionalHeaders));
+            Func<Task> funcToCommit = () => Bus.Send(commandMessage, optionalHeaders);
+            if (!TransactionIsInitiated())
+            {
+                return funcToCommit.Invoke();
+            }
             const string sendFunction = nameof(Send);
-            return SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(funcToCommit, sendFunction, commandMessage, optionalHeaders);
+            return SaveOutboxMessage(funcToCommit, sendFunction, commandMessage, optionalHeaders);
         }
 
         public Task DeferLocal(TimeSpan delay, object message, Dictionary<string, string> optionalHeaders = null)
         {
-            var funcToCommit = new Func<Task>(() => Bus.DeferLocal(delay, message, optionalHeaders));
+            Func<Task> funcToCommit = () => Bus.DeferLocal(delay, message, optionalHeaders);
+            if (!TransactionIsInitiated())
+            {
+                return funcToCommit.Invoke();
+            }
             const string sendFunction = nameof(DeferLocal);
-            return SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(funcToCommit, sendFunction, message, optionalHeaders);
+            return SaveOutboxMessage(funcToCommit, sendFunction, message, optionalHeaders);
         }
 
         public Task Defer(TimeSpan delay, object message, Dictionary<string, string> optionalHeaders = null)
         {
-            var funcToCommit = new Func<Task>(() => Bus.Defer(delay, message, optionalHeaders));
+            Func<Task> funcToCommit = () => Bus.Defer(delay, message, optionalHeaders);
+            if (!TransactionIsInitiated())
+            {
+                return funcToCommit.Invoke();
+            }
             const string sendFunction = nameof(Defer);
-            return SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(funcToCommit, sendFunction, message, optionalHeaders);
+            return SaveOutboxMessage(funcToCommit, sendFunction, message, optionalHeaders);
         }
 
         public Task Reply(object replyMessage, Dictionary<string, string> optionalHeaders = null)
         {
-            var funcToCommit = new Func<Task>(() => Bus.Reply(replyMessage, optionalHeaders));
+            Func<Task> funcToCommit = () => Bus.Reply(replyMessage, optionalHeaders);
+            if (!TransactionIsInitiated())
+            {
+                return funcToCommit.Invoke();
+            }
             const string sendFunction = nameof(Reply);
-            return SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(funcToCommit, sendFunction, replyMessage, optionalHeaders);
+            return SaveOutboxMessage(funcToCommit, sendFunction, replyMessage, optionalHeaders);
         }
 
         public Task Subscribe<TEvent>()
@@ -125,18 +145,16 @@ namespace SafeRebus.Outbox.Bus
 
         public Task Publish(object eventMessage, Dictionary<string, string> optionalHeaders = null)
         {
-            var funcToCommit = new Func<Task>(() => Bus.Publish(eventMessage, optionalHeaders));
+            Func<Task> funcToCommit = () => Bus.Publish(eventMessage, optionalHeaders);
+            if (!TransactionIsInitiated())
+            {
+                return funcToCommit.Invoke();
+            }
             const string sendFunction = nameof(Publish);
-            return SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(funcToCommit, sendFunction, eventMessage, optionalHeaders);
+            return SaveOutboxMessage(funcToCommit, sendFunction, eventMessage, optionalHeaders);
         }
 
         public IAdvancedApi Advanced => Bus.Advanced;
-
-        private Task SaveOutboxMessageOrSendDirectIfTransactionNotInitiated(Func<Task> funcToCommit,
-            string sendFunction, object message, Dictionary<string, string> optionalHeaders)
-        {
-            return !TransactionIsInitiated() ? funcToCommit.Invoke() : SaveOutboxMessage(funcToCommit, sendFunction, message, optionalHeaders);
-        }
 
         private Task SaveOutboxMessage(Func<Task> funcToCommit, string sendFunction, object message, Dictionary<string, string> optionalHeaders)
         {
@@ -154,8 +172,8 @@ namespace SafeRebus.Outbox.Bus
         private Dictionary<string, string> MergeWithOriginalHeaders(Dictionary<string, string> optionalHeaders)
         {
             var headers = new Dictionary<string, string>();
-            optionalHeaders?.ToList().ForEach(x => headers.Add(x.Key, x.Value));
             TransportMessage?.Headers.ToList().ForEach(x => headers.Add(x.Key, x.Value));
+            optionalHeaders?.ToList().ForEach(x => headers.Add(x.Key, x.Value));
             return headers;
         }
 
