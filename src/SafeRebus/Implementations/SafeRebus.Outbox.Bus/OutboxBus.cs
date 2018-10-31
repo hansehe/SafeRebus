@@ -173,7 +173,7 @@ namespace SafeRebus.Outbox.Bus
         {
             var headers = new Dictionary<string, string>();
             TransportMessage?.Headers.ToList().ForEach(x => headers.Add(x.Key, x.Value));
-            optionalHeaders?.ToList().ForEach(x => headers.Add(x.Key, x.Value));
+            optionalHeaders?.ToList().ForEach(x => headers[x.Key] = x.Value);
             return headers;
         }
 
