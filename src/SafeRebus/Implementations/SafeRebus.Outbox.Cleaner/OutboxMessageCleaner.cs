@@ -34,8 +34,15 @@ namespace SafeRebus.Outbox.Cleaner
             var outboxMessages = await OutboxMessageRepository.SelectOutboxMessagesBeforeThreshold(threshold);
             foreach (var outboxMessage in outboxMessages)
             {
-                await Bus.ResendOutboxMessage(outboxMessage);
-                await OutboxMessageRepository.DeleteOutboxMessage(outboxMessage.Id);
+                try
+                {
+                    await Bus.ResendOutboxMessage(outboxMessage);
+                    await OutboxMessageRepository.DeleteOutboxMessage(outboxMessage.Id);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"Could not resend outbox message with id: {outboxMessage.Id}. \r\nFollowing error occured: {e.Message}");
+                }
             }
         }
     }
