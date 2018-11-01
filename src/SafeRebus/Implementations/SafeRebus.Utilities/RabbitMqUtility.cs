@@ -38,6 +38,11 @@ namespace SafeRebus.Utilities
             Logger.LogInformation($"Deleted input queue {InputQueue}.");
         }
 
+        public void CreateQueue(string queue)
+        {
+            GetConnectionFactory().CreateQueue(queue);
+        }
+
         public string ConnectionString => Configuration.BuildRabbitMqConnectionString();
 
         public string InputQueue => Configuration.GetRabbitMqInputQueue();

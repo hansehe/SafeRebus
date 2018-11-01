@@ -20,9 +20,11 @@ namespace SafeRebus.Tests
             return TestServiceExecutor.ExecuteInDbTransactionScopeWithRollback(async scope =>
             {
                 var repository = scope.ServiceProvider.GetService<IResponseRepository>();
-                var response = new SafeRebusResponse();
+                var response = new SafeRebusResponse {Response = "some new random"};
                 await repository.InsertResponse(response);
-                (await repository.SelectResponse(response.Id)).Id.Should().Be(response.Id);
+                var savedResponse = await repository.SelectResponse(response.Id);
+                savedResponse.Response.Should().Be(response.Response);
+                savedResponse.Id.Should().Be(response.Id);
             });
         }
         
@@ -39,7 +41,8 @@ namespace SafeRebus.Tests
                     await repository.InsertResponse(response);
                     allResponseIds.Add(response.Id);
                 }
-                (await repository.SelectResponses(allResponseIds)).Count().Should().Be(allResponseIds.Count);
+                var savedResponseIds = (await repository.SelectResponses(allResponseIds)).Select(savedResponse => savedResponse.Id);
+                allResponseIds.Select(responseId => savedResponseIds.Should().Contain(responseId));
             });
         }
     }

@@ -6,7 +6,6 @@
 
     <ItemGroup>
       <PackageReference Include="NServiceBus.RabbitMQ" Version="5.0.1" />
-      <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
     </ItemGroup>
 
     <ItemGroup>

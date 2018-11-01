@@ -16,13 +16,16 @@ namespace SafeRebus.NServiceBus.Host
         
         private readonly ILogger Logger;
         private readonly IConfiguration Configuration;
+        private readonly IEndpointInstance EndpointInstance;
 
         public NServiceBusHost(
             ILogger<NServiceBusHost> logger,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEndpointInstance endpointInstance)
         {
             Logger = logger;
             Configuration = configuration;
+            EndpointInstance = endpointInstance;
         }
         
         public Task StartAsync(CancellationToken cancellationToken)
@@ -36,27 +39,14 @@ namespace SafeRebus.NServiceBus.Host
         {
             Logger.LogInformation("Stopping NServiceBus host");
             MainTask.Wait(cancellationToken);
-            return Task.CompletedTask;
+            return EndpointInstance.Stop();
         }
 
         private async Task Run(CancellationToken cancellationToken)
         {
-            var endpointConfiguration = new EndpointConfiguration(Configuration.GetRabbitMqInputQueue());
-            
-            endpointConfiguration.UseTransport<RabbitMQTransport>()
-                .ConnectionString(Configuration.GetNServiceBusConnectionString())
-                .UseConventionalRoutingTopology()
-                .UseDurableExchangesAndQueues(false)
-                .Routing()
-                .RouteToEndpoint(typeof(NServiceBusDummyRequest), Configuration.GetRabbitMqOutputQueue());
-
-            var endpointInstance = await Endpoint.Start(endpointConfiguration);
-
             while (!cancellationToken.IsCancellationRequested)
             {
             }
-
-            await endpointInstance.Stop();
         }
     }
 }

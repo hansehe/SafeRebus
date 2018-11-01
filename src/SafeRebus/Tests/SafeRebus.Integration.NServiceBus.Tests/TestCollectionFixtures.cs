@@ -1,7 +1,7 @@
 ﻿using SafeRebus.TestUtilities;
 using Xunit;
 
-namespace SafeRebus.Integration.Camel.Tests
+namespace SafeRebus.Integration.NServiceBus.Tests
 {
     [CollectionDefinition(CollectionTag)]
     public class TestCollectionFixtures : ICollectionFixture<DatabaseFixture>

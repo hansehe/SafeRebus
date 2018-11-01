@@ -11,11 +11,11 @@ namespace SafeRebus.MessageHandler.Utilities
         private const long DefaultCycleDelayMs = 50;
         
         public static async Task WaitUntilSuccess(Func<Task> successFunc, 
-            long timeoutMs = DefaultTimeoutMs, 
-            long cycleDelayMs = DefaultCycleDelayMs)
+            TimeSpan timeout = default(TimeSpan), 
+            TimeSpan cycleDelay = default(TimeSpan))
         {
-            var timeout = TimeSpan.FromMilliseconds(timeoutMs);
-            var cycleDelay = TimeSpan.FromMilliseconds(cycleDelayMs);
+            timeout = timeout == default(TimeSpan) ? TimeSpan.FromMilliseconds(DefaultTimeoutMs) : timeout;
+            cycleDelay = cycleDelay == default(TimeSpan) ? TimeSpan.FromMilliseconds(DefaultCycleDelayMs) : cycleDelay;
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             while (true)
