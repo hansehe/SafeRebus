@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
@@ -8,7 +6,7 @@ using SafeRebus.Abstractions;
 using SafeRebus.Config;
 using SafeRebus.Extensions.Builder;
 using SafeRebus.MessageHandler.Contracts.Requests;
-using SafeRebus.NServiceBus.Host.Contracts;
+using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.NServiceBus.Host.MessageHandlers;
 using SafeRebus.Utilities;
 
@@ -19,7 +17,7 @@ namespace SafeRebus.NServiceBus.Host
         public static IServiceCollection ConfigureWithNServiceBusHost(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
             return serviceCollection
-                .AddScoped<IHandleMessages<NServiceBusDummyRequest>, DummyRequestMessageHandler>()
+                .AddScoped<IHandleMessages<DummyRequest>, DummyRequestMessageHandler>()
                 .AddScoped<IHandleMessages<SafeRebusRequest>, SafeRebusRequestMessageHandler>()
                 .AddScoped<IRabbitMqUtility, RabbitMqUtility>()
                 .UseNServiceBus()
@@ -37,12 +35,19 @@ namespace SafeRebus.NServiceBus.Host
                 rabbitMqUtility.CreateQueue(configuration.GetRabbitMqInputQueue());
                 
                 var endpointConfiguration = new EndpointConfiguration(configuration.GetRabbitMqInputQueue());
-                var routing = endpointConfiguration.UseTransport<RabbitMQTransport>()
+                
+                endpointConfiguration.Conventions()
+                    .DefiningMessagesAs(
+                        type => type.Namespace == typeof(DummyRequest).Namespace)
+                    .DefiningMessagesAs(
+                        type => type.Namespace == typeof(SafeRebusRequest).Namespace)
+                    .DefiningMessagesAs(
+                        type => type.Namespace == typeof(SafeRebusResponse).Namespace);
+                
+                endpointConfiguration.UseTransport<RabbitMQTransport>()
                     .ConnectionString(configuration.GetNServiceBusConnectionString())
                     .UseDirectRoutingTopology()
                     .Routing();
-                routing.RouteToEndpoint(typeof(NServiceBusDummyRequest), configuration.GetRabbitMqOutputQueue());
-                routing.RouteToEndpoint(typeof(NServiceBusResponse), configuration.GetRabbitMqOutputQueue());
 
                 var endpointInstance = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
                 return endpointInstance;

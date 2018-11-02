@@ -24,7 +24,7 @@ namespace SafeRebus.MessageHandler
                     var rabbitMqUtility = serviceProvider.GetService<IRabbitMqUtility>();
                     return configure
                         .Logging(l => l.ColoredConsole(rabbitMqUtility.LogLevel))
-                        .Options(optionsConfigure => optionsConfigure.HandleSafeRebusSteps())
+                        .Options(optionsConfigure => optionsConfigure.HandleSafeRebusSteps(serviceProvider))
                         .Transport(t => t.UseRabbitMq(rabbitMqUtility.ConnectionString, rabbitMqUtility.InputQueue))
                         .Routing(r => r.TypeBased()
                             .Map<DummyRequest>(rabbitMqUtility.OutputQueue)

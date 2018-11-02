@@ -4,9 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
-using NServiceBus.Transport;
-using SafeRebus.Config;
-using SafeRebus.NServiceBus.Host.Contracts;
 
 namespace SafeRebus.NServiceBus.Host
 {

@@ -15,7 +15,9 @@ namespace SafeRebus.Extensions.Builder
                 .ConfigureWith(Utilities.ServiceRegistration.Register)
                 .ConfigureWith(Outbox.Bus.ServiceRegistration.Register)
                 .ConfigureWith(Outbox.Database.ServiceRegistration.Register)
-                .ConfigureWith(Outbox.Cleaner.ServiceRegistration.Register);
+                .ConfigureWith(Outbox.Cleaner.ServiceRegistration.Register)
+                .ConfigureWith(Adapter.Utilities.ServiceRegistration.Register)
+                .ConfigureWith(Adapter.NServiceBus.ServiceRegistration.Register);
         }
         
         public static IServiceCollection ConfigureWithSafeRebusMigration(this IServiceCollection serviceCollection, 

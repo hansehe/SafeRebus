@@ -1,25 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using Rebus.Bus;
 using SafeRebus.Abstractions;
 using SafeRebus.Config;
-using SafeRebus.Extensions.Builder;
 using SafeRebus.MessageHandler.Abstractions;
-using SafeRebus.MessageHandler.Contracts.Requests;
+using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.NServiceBus.Host;
-using SafeRebus.NServiceBus.Host.Contracts;
 using SafeRebus.TestUtilities;
 using Xunit;
 
-namespace SafeRebus.Integration.NServiceBus.Tests
+namespace SafeRebus.Adapter.NServiceBus.Tests
 {
     [Collection(TestCollectionFixtures.CollectionTag)]
     public class NServiceBusIntegrationTests
@@ -67,9 +62,9 @@ namespace SafeRebus.Integration.NServiceBus.Tests
                 var bus = rebusScope.ServiceProvider.GetService<IBus>();
                 
                 var repository = rebusScope.ServiceProvider.GetService<IResponseRepository>();
-                var response = new NServiceBusResponse();
+                var response = new SafeRebusResponse();
 
-                await endpointInstance.Send(response);
+                await endpointInstance.Send(outputQueue, response);
                 await MessageHandler.Utilities.Tools.WaitUntilSuccess(async () =>
                 {
                     (await repository.SelectResponse(response.Id)).Id.Should().Be(response.Id);
