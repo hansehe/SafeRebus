@@ -63,7 +63,7 @@ namespace SafeRebus.NServiceBus.Host
                 } 
                 await Tools.WaitUntilSuccess(
                     () => ResponseRepository.AssertReceivedResponses(responses));
-                Logger.LogInformation("Successfully received all responses!");
+                Logger.LogInformation("Successfully verified all sent responses!");
             }, cancellationToken);
         }
     }
