@@ -1,19 +1,17 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Rebus.Bus;
-using Xunit;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rebus.Bus;
 using SafeRebus.Config;
 using SafeRebus.MessageHandler.Abstractions;
 using SafeRebus.MessageHandler.Contracts.Requests;
-using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.TestUtilities;
+using Xunit;
 
-namespace SafeRebus.Tests
+namespace SafeRebus.MessageHandler.Tests
 {
     [Collection(TestCollectionFixtures.CollectionTag)]
     public class RequestReplyTests

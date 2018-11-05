@@ -10,7 +10,7 @@ using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.TestUtilities;
 using Xunit;
 
-namespace SafeRebus.Tests
+namespace SafeRebus.MessageHandler.Tests
 {
     [Collection(TestCollectionFixtures.CollectionTag)]
     public class ResponseRepositoryTests
