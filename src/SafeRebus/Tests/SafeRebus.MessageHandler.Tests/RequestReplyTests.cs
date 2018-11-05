@@ -25,7 +25,7 @@ namespace SafeRebus.MessageHandler.Tests
                 var repository = scope.ServiceProvider.GetService<IResponseRepository>();
                 var request = new SafeRebusRequest();
                 await bus.Send(request);
-                await MessageHandler.Utilities.Tools.WaitUntilSuccess(async () =>
+                await Utilities.Tools.WaitUntilSuccess(async () =>
                 {
                     (await repository.SelectResponse(request.Id)).Id.Should().Be(request.Id);
                 });
@@ -43,10 +43,14 @@ namespace SafeRebus.MessageHandler.Tests
                 
                 var inputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqInputQueue();
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
-                var schema = scope.ServiceProvider.GetService<IConfiguration>().GetDbSchema();
-                var outboxCleanerHost = TestServiceExecutor.StartOutboxCleanerHost(cancellationTokenSource.Token, schema);
-                var spammerHost = TestServiceExecutor.StartSpammerHost(cancellationTokenSource.Token, outputQueue);
-                var nServiceBusHost = TestServiceExecutor.GetNServiceBusHost(inputQueue);
+                
+                var nServiceBusHost = TestHostProvider.GetNServiceBusHost(inputQueue);
+                var outboxCleanerHost = TestHostProvider.GetOutboxCleanerHost();
+                var spammerHost = TestHostProvider.GetSpammerHost(outputQueue);
+                
+                var nServiceBusHostTask = nServiceBusHost.StartAsync(cancellationTokenSource.Token);
+                var spammerHostTask = spammerHost.StartAsync(cancellationTokenSource.Token);
+                var outboxCleanerHostTask = outboxCleanerHost.StartAsync(cancellationTokenSource.Token);
                 
                 var timeoutTask = Task.Run(async () =>
                 {
@@ -58,9 +62,10 @@ namespace SafeRebus.MessageHandler.Tests
                     await spammerHost.StopAsync(hardCancellationTokenSource.Token);
                 }, hardCancellationTokenSource.Token);
 
-                var nServiceBusHostTask = nServiceBusHost.StartAsync(cancellationTokenSource.Token);
                 await host.StartAsync(cancellationTokenSource.Token);
                 await nServiceBusHostTask;
+                await spammerHostTask;
+                await outboxCleanerHostTask;
                 await timeoutTask;
             });
         }

@@ -33,16 +33,6 @@ namespace SafeRebus.Outbox.Tests
             return new TransportMessage(GetTransportMessageHeaders(replyQueue), new byte[0]);
         }
         
-        private static OutboxMessage GetOutboxMessage()
-        {
-            return new OutboxMessage
-            {
-                Headers = new Dictionary<string, string>(),
-                Message = new SafeRebusRequest(),
-                SendFunction = nameof(IOutboxBus.Send)
-            };
-        }
-        
         [Fact]
         public Task BeginTransactionAndCommit_Success()
         {
@@ -66,12 +56,12 @@ namespace SafeRebus.Outbox.Tests
         public async Task BeginTransactionAndNotCommit_ResendSuccess()
         {
             var request = new SafeRebusRequest();
-            var overrideConfig = new Dictionary<string, string>();
+            var additionalOverrideConfig = new Dictionary<string, string>();
             await  TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var inputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqInputQueue();
-                overrideConfig["rabbitMq:inputQueue"] = inputQueue;
-                overrideConfig["rabbitMq:outputQueue"] = inputQueue;
+                additionalOverrideConfig["rabbitMq:inputQueue"] = inputQueue;
+                additionalOverrideConfig["rabbitMq:outputQueue"] = inputQueue;
                 var bus = scope.ServiceProvider.GetService<IOutboxBus>();
                 var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
                 await bus.BeginTransaction(GetTransportMessage(inputQueue));
@@ -84,7 +74,7 @@ namespace SafeRebus.Outbox.Tests
                 var outboxMessageCleaner = scope.ServiceProvider.GetService<IOutboxMessageCleaner>();
                 await outboxMessageCleaner.CleanMessages(false);
                 await Task.Delay(TimeSpan.FromSeconds(1));
-            }, overrideConfig);
+            }, additionalOverrideConfig);
             await TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var repository = scope.ServiceProvider.GetService<IResponseRepository>();
@@ -95,33 +85,33 @@ namespace SafeRebus.Outbox.Tests
                 });
                 var outboxMessages = await outboxMessageRepository.SelectOutboxMessagesBeforeThreshold(TimeSpan.Zero);
                 outboxMessages.Should().BeEmpty();
-            }, overrideConfig);
+            }, additionalOverrideConfig);
         }
         
         [Fact]
         public async Task BeginTransactionAndNotCommit_ResendWithReplySuccess()
         {
             var response = new SafeRebusResponse();
-            var overrideConfig = new Dictionary<string, string>();
+            var additionalOverrideConfig = new Dictionary<string, string>();
             await  TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var inputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqInputQueue();
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
-                overrideConfig["rabbitMq:inputQueue"] = inputQueue;
-                overrideConfig["rabbitMq:outputQueue"] = outputQueue;
+                additionalOverrideConfig["rabbitMq:inputQueue"] = inputQueue;
+                additionalOverrideConfig["rabbitMq:outputQueue"] = outputQueue;
                 var bus = scope.ServiceProvider.GetService<IOutboxBus>();
                 var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
                 await bus.BeginTransaction(GetTransportMessage(inputQueue));
                 await bus.Reply(response);
                 dbProvider.GetDbTransaction().Commit();
-            }, overrideConfig);
+            }, additionalOverrideConfig);
             await Task.Delay(TimeSpan.FromSeconds(1));
             await TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var outboxMessageCleaner = scope.ServiceProvider.GetService<IOutboxMessageCleaner>();
                 await outboxMessageCleaner.CleanMessages(false);
                 await Task.Delay(TimeSpan.FromSeconds(1));
-            }, overrideConfig);
+            }, additionalOverrideConfig);
             await TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var repository = scope.ServiceProvider.GetService<IResponseRepository>();
@@ -132,7 +122,7 @@ namespace SafeRebus.Outbox.Tests
                 });
                 var outboxMessages = await outboxMessageRepository.SelectOutboxMessagesBeforeThreshold(TimeSpan.Zero);
                 outboxMessages.Should().BeEmpty();
-            }, overrideConfig);
+            }, additionalOverrideConfig);
         }
     }
 }
