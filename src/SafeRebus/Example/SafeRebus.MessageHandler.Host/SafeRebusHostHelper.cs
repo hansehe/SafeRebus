@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using SafeRebus.MessageHandler.Abstractions;
 using SafeRebus.MessageHandler.Contracts.Requests;
+using SafeRebus.MessageHandler.Contracts.Responses;
 
 namespace SafeRebus.MessageHandler.Host
 {
-    internal static class SafeRebusHostHelper
+    public static class SafeRebusHostHelper
     {
-        public static async Task AssertReceivedResponses(this IResponseRepository responseRepository, SafeRebusRequest[] requests)
+        public static Task AssertReceivedResponses(this IResponseRepository responseRepository, SafeRebusRequest[] requests)
         {
             var requestIds = requests.Select(request => request.Id).ToArray();
-            var responseIds = (await responseRepository.SelectResponses(requestIds))
-                .Select(response => response.Id).ToArray();
-            foreach (var requestId in requestIds)
-            {
-                responseIds.Should().Contain(requestId);
-            }
+            return responseRepository.AssertReceivedResponses(requestIds);
+        }
+        
+        public static Task AssertReceivedResponses(this IResponseRepository responseRepository, SafeRebusResponse[] responses)
+        {
+            var requestIds = responses.Select(request => request.Id).ToArray();
+            return responseRepository.AssertReceivedResponses(requestIds);
         }
 
         public static SafeRebusRequest[] GetRequests(int nRequests)
@@ -31,12 +33,41 @@ namespace SafeRebus.MessageHandler.Host
             }
             return requests.ToArray();
         }
+        
+        public static SafeRebusResponse[] GetResponses(int nResponses)
+        {
+            var responses = new List<SafeRebusResponse>();
+            for (var i = 0; i < nResponses; i++)
+            {
+                responses.Add(new SafeRebusResponse());
+            }
+            return responses.ToArray();
+        }
 
         public static async Task RunUntilCancelled(Func<Task> func, CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
                 await func.Invoke();
+            }
+        }
+        
+        private static async Task AssertReceivedResponses(this IResponseRepository responseRepository, Guid[] responseIds)
+        {
+            try
+            {
+                var savedResponses = (await responseRepository.SelectResponses(responseIds));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            var savedResponseIds = (await responseRepository.SelectResponses(responseIds))
+                .Select(response => response.Id).ToArray();
+            foreach (var responseId in responseIds)
+            {
+                savedResponseIds.Should().Contain(responseId);
             }
         }
     }

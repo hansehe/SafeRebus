@@ -25,7 +25,7 @@ namespace SafeRebus.MessageSpammer.Host
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Logger.LogInformation("Starting message spammer host.");
-            MainTask = Task.Run(async () => await Run(cancellationToken));
+            MainTask = Task.Run(() => Run(cancellationToken));
             return MainTask;
         }
 

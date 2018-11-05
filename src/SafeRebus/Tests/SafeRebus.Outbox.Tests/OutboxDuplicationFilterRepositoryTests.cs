@@ -16,7 +16,7 @@ namespace SafeRebus.Outbox.Tests
         [Fact]
         public Task InsertAndCheckExists_Success()
         {
-            return TestServiceExecutor.ExecuteInDbTransactionScopeWithRollback(async scope =>
+            return TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 var id = Guid.NewGuid();
@@ -28,7 +28,7 @@ namespace SafeRebus.Outbox.Tests
         [Fact]
         public Task TryInsert_ShouldBeFalse()
         {
-            return TestServiceExecutor.ExecuteInDbTransactionScopeWithRollback(async scope =>
+            return TestServiceExecutor.ExecuteInScope(async scope =>
             {
                 var repository = scope.ServiceProvider.GetService<IOutboxDuplicationFilterRepository>();
                 var id = Guid.NewGuid();

@@ -18,7 +18,7 @@ namespace SafeRebus.MessageHandler.Database.Insert
         {
             var @params = new DynamicParameters();
             @params.Add(SafeRebus.Database.CommonColumns.Id, response.Id);
-            @params.Add(SafeRebus.MessageHandler.Database.Columns.Response, response.Response);
+            @params.Add(Columns.Response, response.Response);
             var sql = string.Format(SqlTemplate,
                 configuration.GetDbSchema(),
                 Tables.ResponseTable);

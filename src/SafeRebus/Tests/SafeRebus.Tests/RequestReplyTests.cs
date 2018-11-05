@@ -18,8 +18,6 @@ namespace SafeRebus.Tests
     [Collection(TestCollectionFixtures.CollectionTag)]
     public class RequestReplyTests
     {
-        private const long DurationOfAcidTestSec = 10;
-        
         [Fact]
         public Task AsyncRequestReply_Success()
         {
@@ -45,21 +43,26 @@ namespace SafeRebus.Tests
                 var cancellationTokenSource = new CancellationTokenSource();
                 var hardCancellationTokenSource = new CancellationTokenSource();
                 
+                var inputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqInputQueue();
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
                 var schema = scope.ServiceProvider.GetService<IConfiguration>().GetDbSchema();
                 var outboxCleanerHost = TestServiceExecutor.StartOutboxCleanerHost(cancellationTokenSource.Token, schema);
                 var spammerHost = TestServiceExecutor.StartSpammerHost(cancellationTokenSource.Token, outputQueue);
+                var nServiceBusHost = TestServiceExecutor.GetNServiceBusHost(inputQueue);
                 
                 var timeoutTask = Task.Run(async () =>
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(DurationOfAcidTestSec));
+                    await Task.Delay(OverrideConfig.DurationOfAcidTest);
                     cancellationTokenSource.Cancel();
                     await host.StopAsync(hardCancellationTokenSource.Token);
+                    await nServiceBusHost.StopAsync(hardCancellationTokenSource.Token);
                     await outboxCleanerHost.StopAsync(hardCancellationTokenSource.Token);
                     await spammerHost.StopAsync(hardCancellationTokenSource.Token);
                 }, hardCancellationTokenSource.Token);
-                
+
+                var nServiceBusHostTask = nServiceBusHost.StartAsync(cancellationTokenSource.Token);
                 await host.StartAsync(cancellationTokenSource.Token);
+                await nServiceBusHostTask;
                 await timeoutTask;
             });
         }

@@ -26,8 +26,8 @@ namespace SafeRebus.ContainerAdapter
         
         public Task<IEnumerable<IHandleMessages<TMessage>>> GetHandlers<TMessage>(TMessage message, ITransactionContext transactionContext)
         {
-            var scope = ServiceProvider.CreateScope();
-            var incomingStepContext = (IncomingStepContext)transactionContext.Items[StepContext.StepContextKey];
+            var scope = transactionContext.GetOrAdd(SafeRebusContextTags.ScopeContextTag, () => ServiceProvider.CreateScope());
+            var incomingStepContext = transactionContext.GetOrThrow<IncomingStepContext>(StepContext.StepContextKey);
             incomingStepContext.Save(SafeRebusContextTags.ScopeContextTag, scope);
 
             var resolvedHandlerInstances = GetMessageHandlersForMessage<TMessage>(scope);

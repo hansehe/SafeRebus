@@ -7,6 +7,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Abstractions\SafeRebus.Abstractions.csproj" />
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Outbox.Abstractions\SafeRebus.Outbox.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Implementations\SafeRebus.Adapter.NServiceBus\SafeRebus.Adapter.NServiceBus.csproj" />
+      <ProjectReference Include="..\..\Implementations\SafeRebus.Adapter.Utilities\SafeRebus.Adapter.Utilities.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.Config\SafeRebus.Config.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.ContainerAdapter\SafeRebus.ContainerAdapter.csproj" />
       <ProjectReference Include="..\..\Implementations\SafeRebus.Database\SafeRebus.Database.csproj" />

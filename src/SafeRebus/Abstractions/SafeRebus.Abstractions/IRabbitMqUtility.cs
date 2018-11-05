@@ -10,6 +10,8 @@ namespace SafeRebus.Abstractions
         
         void DeleteInputQueue();
         
+        void CreateQueue(string queue);
+        
         string ConnectionString { get; }
         
         string InputQueue { get; }

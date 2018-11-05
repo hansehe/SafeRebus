@@ -6,6 +6,8 @@ namespace SafeRebus.TestUtilities
 {
     public static class OverrideConfig
     {
+        public static TimeSpan DurationOfAcidTest = TimeSpan.FromSeconds(10);
+        
         public static Dictionary<string, string> GetOverrideConfig()
         {
             var random = new Random();

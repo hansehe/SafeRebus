@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NServiceBus.RabbitMQ" Version="5.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Builder\SafeRebus.MessageHandler.Builder.csproj" />
+      <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Contracts\SafeRebus.MessageHandler.Contracts.csproj" />
+      <ProjectReference Include="..\..\Extensions\SafeRebus.Extensions.Builder\SafeRebus.Extensions.Builder.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="DefaultNServiceBusConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>
