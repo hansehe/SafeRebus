@@ -9,16 +9,21 @@ AvailableCommands = [
     ['run', 'Run solution.'],
     ['build', 'Build solution.'],
     ['test', 'Test with integration testing.'],
+    ['publish', 'Publish nuget packages.'],
     ['start-dev', 'Start development session by deploying service dependencies'],
     ['stop-dev', 'Stop development session by removing service dependencies'],
     ['help', 'Print available argument commands.']
 ]
 
 def BuildDocker(buildSelection):
+    VersionTools.ExportVersionFromChangelogToEnvironment('CHANGELOG.md', 'VERSION')
     srcFolder = ['src', '..']
     miniSwarmManagementFile = 'swarm-management.yml'
     migratorComposeFiles = [
         'docker-compose.migrator.yml'
+    ]
+    nugetDockerComposeFiles = [
+        'docker-compose.publish.nuget.yml'
     ]
     generalComposeFiles = [
         'docker-compose.message.handler.yml',
@@ -42,6 +47,12 @@ def BuildDocker(buildSelection):
         os.chdir(srcFolder[0])
         DockerComposeTools.ExecuteComposeTests(
             ['docker-compose.tests.yml'], ['saferebus-tests'])
+        os.chdir(srcFolder[1])
+
+    elif buildSelection == 'publish':
+        os.chdir(srcFolder[0])
+        DockerComposeTools.DockerComposeBuild(nugetDockerComposeFiles)
+        DockerComposeTools.DockerComposeUp(nugetDockerComposeFiles, False)
         os.chdir(srcFolder[1])
 
     elif buildSelection == 'start-dev':

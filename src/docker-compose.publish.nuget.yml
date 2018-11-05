@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  saferebus-abstractions-nuget:
+    image: saferebus.abstractions.nuget
+    build:
+      context: .
+      dockerfile: Dockerfile_PublishNuget
+      args:
+        - VERSION=${VERSION}
+        - PROJECT_FOLDER=SafeRebus/Abstractions
+    environment:
+      - NUGET_FEED=${NUGET_FEED}
+      - API_KEY=${API_KEY}
+
+  saferebus-implementations-nuget:
+    image: saferebus.implementations.nuget
+    build:
+      context: .
+      dockerfile: Dockerfile_PublishNuget
+      args:
+        - VERSION=${VERSION}
+        - PROJECT_FOLDER=SafeRebus/Implementations
+    environment:
+      - NUGET_FEED=${NUGET_FEED}
+      - API_KEY=${API_KEY}
+
+  saferebus-extensions-nuget:
+    image: saferebus.extensions.nuget
+    build:
+      context: .
+      dockerfile: Dockerfile_PublishNuget
+      args:
+        - VERSION=${VERSION}
+        - PROJECT_FOLDER=SafeRebus/Extensions
+    environment:
+      - NUGET_FEED=${NUGET_FEED}
+      - API_KEY=${API_KEY}
