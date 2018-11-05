@@ -20,11 +20,10 @@ namespace SafeRebus.Adapter.NServiceBus
             rebusHeaders[Headers.ReturnAddress] = nServiceBusHeaders[NServiceBusHeaders.ReplyToAddress];
             rebusHeaders[Headers.SenderAddress] = nServiceBusHeaders[NServiceBusHeaders.OriginatingEndpoint];
             rebusHeaders[Headers.CorrelationId] = nServiceBusHeaders[NServiceBusHeaders.CorrelationId];
+            rebusHeaders[Headers.ContentType] = nServiceBusHeaders[NServiceBusHeaders.ContentType];
             rebusHeaders[Headers.Intent] = nServiceBusHeaders[NServiceBusHeaders.MessageIntent];
             rebusHeaders[Headers.MessageId] = nServiceBusHeaders[NServiceBusHeaders.MessageId];
             rebusHeaders[Headers.SentTime] = nServiceBusHeaders[NServiceBusHeaders.TimeSent];
-
-            rebusHeaders[Headers.ContentType] = ContentTypes.RebusContentType;
             return rebusHeaders;
         }
         

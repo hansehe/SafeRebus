@@ -14,7 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Adhoc\SafeRebus.NServiceBus.Host\SafeRebus.NServiceBus.Host.csproj" />
       <ProjectReference Include="..\SafeRebus.TestUtilities\SafeRebus.TestUtilities.csproj" />
     </ItemGroup>
 

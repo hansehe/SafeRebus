@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SafeRebus.Abstractions;
 using SafeRebus.MessageHandler.Builder;
+using SafeRebus.NServiceBus.Host;
 
 namespace SafeRebus.TestUtilities
 {
@@ -48,24 +49,16 @@ namespace SafeRebus.TestUtilities
             return spammerHost;
         }
         
-        public static async Task ExecuteInDbTransactionScopeWithRollback(Func<IServiceScope, Task> action)
+        public static IHostedService GetNServiceBusHost(string safeRebusInputQueue)
         {
-            await ExecuteInScope(async scope =>
-            {
-                var dbProvider = scope.ServiceProvider.GetService<IDbProvider>();
-                using (var transaction = dbProvider.GetDbTransaction())
-                {
-                    try
-                    {
-                        await action.Invoke(scope);
-                    }
-                    finally
-                    {
-                        transaction.Rollback();
-                    }
-                }
-            });
+            var overrideConfig = OverrideConfig.GetOverrideConfig();
+            overrideConfig["rabbitMq:outputQueue"] = safeRebusInputQueue;
+            var provider = GetNServiceBusServiceProvider(overrideConfig);
+            var scope = provider.CreateScope();
+            var nServiceBusHost = scope.ServiceProvider.GetService<IHostedService>();
+            return nServiceBusHost;
         }
+        
         
         public static IServiceProvider GetServiceProvider(Dictionary<string, string> additionalOverrideConfig = null)
         {
@@ -95,6 +88,16 @@ namespace SafeRebus.TestUtilities
             overrideConfig["rabbitMq:outputQueue"] = outputQueue;
             var provider = new ServiceCollection()
                 .ConfigureWithSafeRebusMessageSpammer(overrideConfig)
+                .BuildServiceProvider();
+            return provider;
+        }
+        
+        public static IServiceProvider GetNServiceBusServiceProvider(Dictionary<string, string> overrideConfig = null)
+        {
+            overrideConfig = overrideConfig ?? OverrideConfig.GetOverrideConfig();
+            overrideConfig["database:schema"] = DatabaseFixture.MigratedDatabaseSchema;
+            var provider = new ServiceCollection()
+                .ConfigureWithNServiceBusHost(overrideConfig)
                 .BuildServiceProvider();
             return provider;
         }

@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Newtonsoft.Json;
+using System.Xml.Serialization;
+using Rebus.Serialization;
 using SafeRebus.Adapters.Abstractions;
 
 namespace SafeRebus.Adapter.Utilities.Converters
@@ -11,23 +13,44 @@ namespace SafeRebus.Adapter.Utilities.Converters
     {
         public const string ContentTypeConverter = ContentTypes.NServiceBusContentType;
 
-        public static byte[] Convert(byte[] incomingBody)
+        public static bool TryConvert(byte[] incomingBody, out byte[] convertedBody)
         {
             var xmlString = Encoding.UTF8.GetString(incomingBody);
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xmlString);
-            var attribute = xmlDocument.DocumentElement.Attributes["xmlns"];
-            var attributeValue = attribute.Value;
-            var typeNamespace = attributeValue.Substring(attributeValue.LastIndexOf('/') + 1);
-            var assemblyType = AppDomain.CurrentDomain.GetAssemblies().First(x => x.FullName == typeNamespace);
-            var jsonString = JsonConvert.SerializeXmlNode(xmlDocument);
-            var jsonBody = Encoding.UTF8.GetBytes(jsonString);
-            return jsonBody;
+            var namespaceAttributeValue = xmlDocument.DocumentElement.Attributes["xmlns"].Value;
+            var typeName = xmlDocument.DocumentElement.Name;
+            var typeNamespace = namespaceAttributeValue.Substring(namespaceAttributeValue.LastIndexOf('/') + 1);
+            var @namespace = typeNamespace.Substring(0, typeNamespace.LastIndexOf('.'));
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var fullName = assembly.GetName().Name;
+                if (fullName == @namespace)
+                {
+                    var bodyType = assembly.GetTypes().First(x => x.Name == typeName);
+                    xmlDocument.RemoveUnknownAttributes();
+                    var @object = DeserializeXml(bodyType, xmlDocument);
+                    var objectSerializer = new ObjectSerializer();
+                    convertedBody = objectSerializer.Serialize(@object);
+                    return true;
+                }
+            }
+            convertedBody = new byte[0];
+            return false;
         }
 
-        private static T DeserializeXml<T>(string xmlString) where T : new()
+        private static object DeserializeXml(Type type, XmlDocument xmlDocument)
         {
-            return new T();
+            var xmlString = xmlDocument.OuterXml;
+            var reader = new StringReader(xmlString);
+            var xmlSerializer = new XmlSerializer(type);
+            var @object = xmlSerializer.Deserialize(reader);
+            return @object;
+        }
+
+        private static void RemoveUnknownAttributes(this XmlDocument xmlDocument)
+        {
+            xmlDocument.DocumentElement.Attributes["xmlns"].RemoveAll();
         }
     }
 }

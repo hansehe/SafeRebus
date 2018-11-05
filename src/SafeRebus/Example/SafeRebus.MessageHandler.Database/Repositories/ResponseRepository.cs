@@ -39,7 +39,7 @@ namespace SafeRebus.MessageHandler.Database.Repositories
         {
             Logger.LogDebug($"Selecting response with id: {id.ToString()}");
             return Select.SelectResponse.Select(
-                DbProvider.GetDbTransaction().Connection,
+                DbProvider.GetDbConnection(),
                 Configuration,
                 id);
         }
@@ -48,7 +48,7 @@ namespace SafeRebus.MessageHandler.Database.Repositories
         {
             Logger.LogDebug($"Selecting multiple responses");
             return Select.SelectResponses.Select(
-                DbProvider.GetDbTransaction().Connection,
+                DbProvider.GetDbConnection(),
                 Configuration,
                 ids.ToArray());
         }

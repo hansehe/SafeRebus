@@ -31,15 +31,7 @@ namespace SafeRebus.RebusSteps.IncomingSteps
                 context.Save(transportMessage);
             }
 
-            try
-            {
-                await next();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            await next();
         }
     }
 }

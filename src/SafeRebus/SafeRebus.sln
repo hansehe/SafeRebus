@@ -92,6 +92,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.Adapters.Abstract
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.Adapter.Utilities", "Implementations\SafeRebus.Adapter.Utilities\SafeRebus.Adapter.Utilities.csproj", "{4449B582-D14D-4E77-9C39-7F6E867317D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRebus.NServiceBus.Service", "Services\SafeRebus.NServiceBus.Service\SafeRebus.NServiceBus.Service.csproj", "{A5C14135-1491-489F-96A4-72789919263D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,6 +248,10 @@ Global
 		{4449B582-D14D-4E77-9C39-7F6E867317D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4449B582-D14D-4E77-9C39-7F6E867317D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4449B582-D14D-4E77-9C39-7F6E867317D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5C14135-1491-489F-96A4-72789919263D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5C14135-1491-489F-96A4-72789919263D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5C14135-1491-489F-96A4-72789919263D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5C14135-1491-489F-96A4-72789919263D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4B9DA0CE-595E-474C-86A8-5EFB9B6DFC6E} = {CD52143A-4B58-4E86-A5C8-DC945F0DD1CC}
@@ -287,5 +293,6 @@ Global
 		{2074650B-8B05-41DA-B249-2905123BF0F2} = {913C7549-E099-4F62-B6B7-5119544EFC66}
 		{638B31E5-4936-4B1E-B787-4625B8BADB70} = {CD52143A-4B58-4E86-A5C8-DC945F0DD1CC}
 		{4449B582-D14D-4E77-9C39-7F6E867317D1} = {913C7549-E099-4F62-B6B7-5119544EFC66}
+		{A5C14135-1491-489F-96A4-72789919263D} = {0B3D261C-9E09-42F1-9B00-C29CAAC434D7}
 	EndGlobalSection
 EndGlobal

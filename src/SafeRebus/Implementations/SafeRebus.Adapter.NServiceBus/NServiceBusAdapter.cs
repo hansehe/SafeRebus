@@ -28,7 +28,14 @@ namespace SafeRebus.Adapter.NServiceBus
         public TransportMessage ConvertIncomingTransportMessage(TransportMessage incomingTransportMessage)
         {
             var adapterHeaders = HeaderConverter.AppendRebusHeaders(incomingTransportMessage.Headers);
-            var adapterBody = BodyConverter.ConvertBodyFromNServiceBus(incomingTransportMessage);
+            var contentType = incomingTransportMessage.Headers[NServiceBusHeaders.ContentType];
+            var adapterBody = incomingTransportMessage.Body;
+            if (BodyConverter.TryConvert(adapterBody, contentType, out var convertedBody))
+            {
+                adapterHeaders[Headers.ContentType] = ContentTypes.RebusContentType;
+                adapterHeaders[NServiceBusHeaders.ContentType] = ContentTypes.RebusContentType;
+                adapterBody = convertedBody;
+            }
             var updatedTransportMessage = new TransportMessage(adapterHeaders, adapterBody);
             return updatedTransportMessage;
         }

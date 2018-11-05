@@ -34,7 +34,7 @@ namespace SafeRebus.Outbox.Cleaner.Host
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Logger.LogInformation("Starting outbox cleaner host.");
-            MainTask = Task.Run(async () => await Run(cancellationToken));
+            MainTask = Task.Run(() => Run(cancellationToken));
             return Task.CompletedTask;
         }
 

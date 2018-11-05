@@ -19,7 +19,8 @@ namespace SafeRebus.NServiceBus.Host
             return serviceCollection
                 .AddScoped<IHandleMessages<DummyRequest>, DummyRequestMessageHandler>()
                 .AddScoped<IHandleMessages<SafeRebusRequest>, SafeRebusRequestMessageHandler>()
-                .AddScoped<IRabbitMqUtility, RabbitMqUtility>()
+                .ConfigureWith(MessageHandler.Database.ServiceRegistration.Register)
+                .ConfigureWithSafeRebus()
                 .UseNServiceBus()
                 .AddHostedService<NServiceBusHost>()
                 .UseNServiceBusConfiguration(overrideConfig)

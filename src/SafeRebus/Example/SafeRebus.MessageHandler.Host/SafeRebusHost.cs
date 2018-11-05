@@ -44,7 +44,7 @@ namespace SafeRebus.MessageHandler.Host
             
             RabbitMqUtility.PurgeInputQueue();
 
-            MainTask = Task.Run(async () => await Run(cancellationToken));
+            MainTask = Task.Run(() => Run(cancellationToken));
             return MainTask;
         }
 

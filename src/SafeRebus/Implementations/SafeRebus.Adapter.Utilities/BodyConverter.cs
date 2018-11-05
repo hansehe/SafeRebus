@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using SafeRebus.Adapter.Utilities.Converters;
 using SafeRebus.Adapters.Abstractions;
 
@@ -7,14 +5,15 @@ namespace SafeRebus.Adapter.Utilities
 {
     public class BodyConverter : IBodyConverter
     {
-        public byte[] Convert(byte[] incomingBody, string contentType)
+        public bool TryConvert(byte[] incomingBody, string contentType, out byte[] convertedBody)
         {
             switch (contentType)
             {
                 case XmlConverter.ContentTypeConverter:
-                    return XmlConverter.Convert(incomingBody);
+                    return XmlConverter.TryConvert(incomingBody, out convertedBody);
                 default:
-                    return incomingBody;
+                    convertedBody = new byte[0];
+                    return false;
             }
         }
     }
