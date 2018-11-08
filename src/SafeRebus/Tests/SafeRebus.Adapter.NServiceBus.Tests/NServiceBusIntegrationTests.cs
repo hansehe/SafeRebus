@@ -21,7 +21,7 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
         [Fact]
         public Task SendFromNServiceBusToRebus_Success()
         {
-            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (scope, bus) =>
+            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (scope, rebusBus) =>
             {
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
                 var endpointInstance = scope.ServiceProvider.GetService<IEndpointInstance>();
@@ -39,7 +39,7 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
         [Fact]
         public Task SendFromNServiceBusToRebusWithReplyFromRebus_Success()
         {
-            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (scope, bus) =>
+            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (scope, rebusBus) =>
             {
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
                 var endpointInstance = scope.ServiceProvider.GetService<IEndpointInstance>();

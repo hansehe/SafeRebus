@@ -28,11 +28,11 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
             };
 
             var rebusScope = TestServiceProvider.GetMessageHandlerServiceProvider(rebusIntegrationAdditionalConfig).CreateScope();
-            var bus = rebusScope.ServiceProvider.GetService<IBus>();
+            var rebusBus = rebusScope.ServiceProvider.GetService<IBus>();
 
             try
             {
-                await action.Invoke(nServiceBusScope, bus);
+                await action.Invoke(nServiceBusScope, rebusBus);
             }
             finally
             {
