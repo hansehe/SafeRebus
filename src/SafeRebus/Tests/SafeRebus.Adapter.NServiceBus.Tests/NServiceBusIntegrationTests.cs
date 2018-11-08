@@ -21,11 +21,11 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
         [Fact]
         public Task SendFromNServiceBusToRebus_Success()
         {
-            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (scope, rebusBus) =>
+            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (nServiceBusScope, rebusBus) =>
             {
-                var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
-                var endpointInstance = scope.ServiceProvider.GetService<IEndpointInstance>();
-                var repository = scope.ServiceProvider.GetService<IResponseRepository>();
+                var outputQueue = nServiceBusScope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
+                var endpointInstance = nServiceBusScope.ServiceProvider.GetService<IEndpointInstance>();
+                var repository = nServiceBusScope.ServiceProvider.GetService<IResponseRepository>();
                 var response = new SafeRebusResponse();
 
                 await endpointInstance.Send(outputQueue, response);
@@ -39,11 +39,11 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
         [Fact]
         public Task SendFromNServiceBusToRebusWithReplyFromRebus_Success()
         {
-            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (scope, rebusBus) =>
+            return NServiceBusTestUtilities.ExecuteInNServiceBusScope(async (nServiceBusScope, rebusBus) =>
             {
-                var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
-                var endpointInstance = scope.ServiceProvider.GetService<IEndpointInstance>();
-                var repository = scope.ServiceProvider.GetService<IResponseRepository>();
+                var outputQueue = nServiceBusScope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
+                var endpointInstance = nServiceBusScope.ServiceProvider.GetService<IEndpointInstance>();
+                var repository = nServiceBusScope.ServiceProvider.GetService<IResponseRepository>();
                 var request = new SafeRebusRequest();
                 var request2 = new SafeRebusRequest();
 
