@@ -13,7 +13,7 @@
       <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Builder\SafeRebus.MessageHandler.Builder.csproj" />
       <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Contracts\SafeRebus.MessageHandler.Contracts.csproj" />
       <ProjectReference Include="..\..\Extensions\SafeRebus.Extensions.Builder\SafeRebus.Extensions.Builder.csproj" />
-      <ProjectReference Include="..\..\Standards\SafeStandard.Headers\SafeStandard.Headers.csproj" />
+      <ProjectReference Include="..\..\Standards\SafeStandard\SafeStandard.csproj" />
     </ItemGroup>
 
     <ItemGroup>

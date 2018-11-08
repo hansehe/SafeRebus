@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using NServiceBus;
 using SafeRebus.Adapter.Utilities;
-using SafeStandard.Headers;
+using SafeStandard;
 
 namespace SafeRebus.NServiceBus.Host
 {
@@ -13,7 +13,7 @@ namespace SafeRebus.NServiceBus.Host
         {
             foreach (var headerKey in headers.Keys)
             {
-                if (headerKey.Contains(SafeHeaders.HeaderPrefix))
+                if (headerKey.Contains(SafeStandardHeaders.HeaderPrefix))
                 {
                     return true;
                 }
@@ -24,37 +24,37 @@ namespace SafeRebus.NServiceBus.Host
         
         public static void AppendSafeStandardHeaders(Dictionary<string, string> nServiceBusHeaders)
         {
-            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeHeaders.ReplyToAddress] = nServiceBusHeaders[Headers.ReplyToAddress],
+            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeStandardHeaders.ReplyToAddress] = nServiceBusHeaders[Headers.ReplyToAddress],
                 nServiceBusHeaders.ContainsKey(Headers.ReplyToAddress));
-            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeHeaders.OriginatingAddress] = nServiceBusHeaders[Headers.OriginatingEndpoint],
+            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeStandardHeaders.OriginatingAddress] = nServiceBusHeaders[Headers.OriginatingEndpoint],
                 nServiceBusHeaders.ContainsKey(Headers.OriginatingEndpoint));
-            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeHeaders.CorrelationId] = nServiceBusHeaders[Headers.CorrelationId],
+            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeStandardHeaders.CorrelationId] = nServiceBusHeaders[Headers.CorrelationId],
                 nServiceBusHeaders.ContainsKey(Headers.CorrelationId));
-            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeHeaders.ContentType] = nServiceBusHeaders[Headers.ContentType],
+            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeStandardHeaders.ContentType] = nServiceBusHeaders[Headers.ContentType],
                 nServiceBusHeaders.ContainsKey(Headers.ContentType));
-            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeHeaders.MessageId] = nServiceBusHeaders[Headers.MessageId],
+            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeStandardHeaders.MessageId] = nServiceBusHeaders[Headers.MessageId],
                 nServiceBusHeaders.ContainsKey(Headers.MessageId));
-            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeHeaders.MessageType] = nServiceBusHeaders[Headers.EnclosedMessageTypes],
+            AdapterUtilities.InvokeIfTrue(() => nServiceBusHeaders[SafeStandardHeaders.MessageType] = nServiceBusHeaders[Headers.EnclosedMessageTypes],
                 nServiceBusHeaders.ContainsKey(Headers.EnclosedMessageTypes));
-            nServiceBusHeaders[SafeHeaders.TimeSent] = DateTime.UtcNow.ToSafeHeaderValidString();
+            nServiceBusHeaders[SafeStandardHeaders.TimeSent] = DateTime.UtcNow.ToSafeHeaderValidString();
         }
         
         public static void AppendNServiceBusHeaders(Dictionary<string, string> safeStandardHeaders)
         {
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.ReplyToAddress] = safeStandardHeaders[SafeHeaders.ReplyToAddress],
-                safeStandardHeaders.ContainsKey(SafeHeaders.ReplyToAddress));
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.OriginatingEndpoint] = safeStandardHeaders[SafeHeaders.OriginatingAddress],
-                safeStandardHeaders.ContainsKey(SafeHeaders.OriginatingAddress));
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.CorrelationId] = safeStandardHeaders[SafeHeaders.CorrelationId],
-                safeStandardHeaders.ContainsKey(SafeHeaders.CorrelationId));
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.ContentType] = safeStandardHeaders[SafeHeaders.ContentType],
-                safeStandardHeaders.ContainsKey(SafeHeaders.ContentType));
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.MessageId] = safeStandardHeaders[SafeHeaders.MessageId],
-                safeStandardHeaders.ContainsKey(SafeHeaders.MessageId));
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.EnclosedMessageTypes] = safeStandardHeaders[SafeHeaders.MessageType],
-                safeStandardHeaders.ContainsKey(SafeHeaders.MessageType));
-            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.TimeSent] = DateTimeExtensions.ToWireFormattedString(safeStandardHeaders[SafeHeaders.TimeSent].ToDatetimeFromSafeHeaderValidString()),
-                safeStandardHeaders.ContainsKey(SafeHeaders.TimeSent));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.ReplyToAddress] = safeStandardHeaders[SafeStandardHeaders.ReplyToAddress],
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.ReplyToAddress));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.OriginatingEndpoint] = safeStandardHeaders[SafeStandardHeaders.OriginatingAddress],
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.OriginatingAddress));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.CorrelationId] = safeStandardHeaders[SafeStandardHeaders.CorrelationId],
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.CorrelationId));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.ContentType] = safeStandardHeaders[SafeStandardHeaders.ContentType],
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.ContentType));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.MessageId] = safeStandardHeaders[SafeStandardHeaders.MessageId],
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.MessageId));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.EnclosedMessageTypes] = safeStandardHeaders[SafeStandardHeaders.MessageType],
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.MessageType));
+            AdapterUtilities.InvokeIfTrue(() => safeStandardHeaders[Headers.TimeSent] = DateTimeExtensions.ToWireFormattedString(safeStandardHeaders[SafeStandardHeaders.TimeSent].ToDatetimeFromSafeHeaderValidString()),
+                safeStandardHeaders.ContainsKey(SafeStandardHeaders.TimeSent));
         }
     }
 }

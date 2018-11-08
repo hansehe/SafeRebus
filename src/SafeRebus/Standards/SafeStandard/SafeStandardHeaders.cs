@@ -1,8 +1,8 @@
-﻿namespace SafeStandard.Headers
+﻿namespace SafeStandard
 {
-    public static class SafeHeaders
+    public static class SafeStandardHeaders
     {
-        public const string HeaderPrefix = "SafeHeaders";
+        public const string HeaderPrefix = "SafeStandardHeaders";
         
         public static readonly string ContentType = $"{HeaderPrefix}.ContentType"; // ~= Example: application/json;charset=utf8
         public static readonly string CorrelationId = $"{HeaderPrefix}.CorrelationId"; // ~= <GUID> (consistent for all correlating messages)

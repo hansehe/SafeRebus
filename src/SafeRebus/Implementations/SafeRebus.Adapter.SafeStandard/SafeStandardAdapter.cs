@@ -2,7 +2,7 @@
 using Rebus.Messages;
 using SafeRebus.Adapters.Abstractions;
 using SafeRebus.Adapters.Abstractions.Adapters;
-using SafeStandard.Headers;
+using SafeStandard;
 
 namespace SafeRebus.Adapter.SafeStandard
 {
@@ -24,15 +24,15 @@ namespace SafeRebus.Adapter.SafeStandard
         public TransportMessage ConvertIncomingTransportMessage(TransportMessage incomingTransportMessage)
         {
             var safeStandardHeaders = incomingTransportMessage.Headers;
-            var contentType = incomingTransportMessage.Headers[SafeHeaders.ContentType];
-            var messageType = incomingTransportMessage.Headers[SafeHeaders.MessageType];
+            var contentType = incomingTransportMessage.Headers[SafeStandardHeaders.ContentType];
+            var messageType = incomingTransportMessage.Headers[SafeStandardHeaders.MessageType];
             var incomingBody = incomingTransportMessage.Body;
 
             var updatedTransportMessage = incomingTransportMessage;
             if (contentType != ContentTypes.RebusContentType && 
                 BodyConverter.TryConvert(incomingBody, contentType, messageType, out var convertedBody))
             {
-                safeStandardHeaders[SafeHeaders.ContentType] = ContentTypes.JsonContentType;
+                safeStandardHeaders[SafeStandardHeaders.ContentType] = ContentTypes.JsonContentType;
                 updatedTransportMessage = new TransportMessage(safeStandardHeaders, convertedBody);
             }
             

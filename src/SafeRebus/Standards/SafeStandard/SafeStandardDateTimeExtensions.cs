@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
 
-namespace SafeStandard.Headers
+namespace SafeStandard
 {
-    public static class SafeHeaderDateTimeExtensions
+    public static class SafeStandardDateTimeExtensions
     {
         public static string ToSafeHeaderValidString(this DateTime dateTime)
         {
