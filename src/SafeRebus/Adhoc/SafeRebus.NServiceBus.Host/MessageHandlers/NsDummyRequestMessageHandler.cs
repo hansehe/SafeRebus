@@ -5,11 +5,11 @@ using SafeRebus.MessageHandler.Contracts.Requests;
 
 namespace SafeRebus.NServiceBus.Host.MessageHandlers
 {
-    public class DummyRequestMessageHandler : IHandleMessages<DummyRequest>
+    public class NsDummyRequestMessageHandler : IHandleMessages<DummyRequest>
     {
         private readonly ILogger Logger;
 
-        public DummyRequestMessageHandler(ILogger<DummyRequest> logger)
+        public NsDummyRequestMessageHandler(ILogger<NsDummyRequestMessageHandler> logger)
         {
             Logger = logger;
         }

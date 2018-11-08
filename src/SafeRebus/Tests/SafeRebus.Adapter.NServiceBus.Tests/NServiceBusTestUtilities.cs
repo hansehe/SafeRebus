@@ -12,7 +12,7 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
 {
     public static class NServiceBusTestUtilities
     {
-        public static async Task ExecuteInNServiceBusScope(Func<IServiceScope, Task> action)
+        public static async Task ExecuteInNServiceBusScope(Func<IServiceScope, IBus, Task> action)
         {
             var nServiceBusScope = TestServiceProvider.GetNServiceBusServiceProvider(
                 NServiceBusOverrideConfig.GetNServiceBusAdditionalOverrideConfig())
@@ -32,7 +32,7 @@ namespace SafeRebus.Adapter.NServiceBus.Tests
 
             try
             {
-                await action.Invoke(nServiceBusScope);
+                await action.Invoke(nServiceBusScope, bus);
             }
             finally
             {

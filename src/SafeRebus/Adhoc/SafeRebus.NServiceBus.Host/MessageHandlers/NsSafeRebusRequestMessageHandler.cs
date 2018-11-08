@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
@@ -7,12 +6,12 @@ using SafeRebus.MessageHandler.Contracts.Responses;
 
 namespace SafeRebus.NServiceBus.Host.MessageHandlers
 {
-    public class SafeRebusRequestMessageHandler : IHandleMessages<SafeRebusRequest>
+    public class NsSafeRebusRequestMessageHandler : IHandleMessages<SafeRebusRequest>
     {
         private readonly ILogger Logger;
 
-        public SafeRebusRequestMessageHandler(
-            ILogger<SafeRebusRequestMessageHandler> logger)
+        public NsSafeRebusRequestMessageHandler(
+            ILogger<NsSafeRebusRequestMessageHandler> logger)
         {
             Logger = logger;
         }

@@ -28,8 +28,7 @@ def BuildDocker(buildSelection):
     generalComposeFiles = [
         'docker-compose.message.handler.yml',
         'docker-compose.outboxcleaner.yml',
-        'docker-compose.message.spammer.yml',
-        'docker-compose.adhoc.nservicebus.yml'
+        'docker-compose.message.spammer.yml'
     ]
 
     if buildSelection == 'run':

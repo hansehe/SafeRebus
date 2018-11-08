@@ -41,14 +41,11 @@ namespace SafeRebus.MessageHandler.Tests
                 var cancellationTokenSource = new CancellationTokenSource();
                 var hardCancellationTokenSource = new CancellationTokenSource();
                 
-                var inputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqInputQueue();
                 var outputQueue = scope.ServiceProvider.GetService<IConfiguration>().GetRabbitMqOutputQueue();
                 
-                var nServiceBusHost = TestHostProvider.GetNServiceBusHost(inputQueue);
                 var outboxCleanerHost = TestHostProvider.GetOutboxCleanerHost();
                 var spammerHost = TestHostProvider.GetSpammerHost(outputQueue);
                 
-                var nServiceBusHostTask = nServiceBusHost.StartAsync(cancellationTokenSource.Token);
                 var spammerHostTask = spammerHost.StartAsync(cancellationTokenSource.Token);
                 var outboxCleanerHostTask = outboxCleanerHost.StartAsync(cancellationTokenSource.Token);
                 
@@ -57,13 +54,11 @@ namespace SafeRebus.MessageHandler.Tests
                     await Task.Delay(OverrideConfig.DurationOfAcidTest);
                     cancellationTokenSource.Cancel();
                     await host.StopAsync(hardCancellationTokenSource.Token);
-                    await nServiceBusHost.StopAsync(hardCancellationTokenSource.Token);
                     await outboxCleanerHost.StopAsync(hardCancellationTokenSource.Token);
                     await spammerHost.StopAsync(hardCancellationTokenSource.Token);
                 }, hardCancellationTokenSource.Token);
 
                 await host.StartAsync(cancellationTokenSource.Token);
-                await nServiceBusHostTask;
                 await spammerHostTask;
                 await outboxCleanerHostTask;
                 await timeoutTask;

@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Abstractions\SafeRebus.Adapters.Abstractions\SafeRebus.Adapters.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Standards\SafeStandard.Headers\SafeStandard.Headers.csproj" />
     </ItemGroup>
 
 </Project>

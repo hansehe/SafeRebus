@@ -17,12 +17,6 @@ namespace SafeRebus.MessageHandler.Host
             var requestIds = requests.Select(request => request.Id).ToArray();
             return responseRepository.AssertReceivedResponses(requestIds);
         }
-        
-        public static Task AssertReceivedResponses(this IResponseRepository responseRepository, SafeRebusResponse[] responses)
-        {
-            var requestIds = responses.Select(request => request.Id).ToArray();
-            return responseRepository.AssertReceivedResponses(requestIds);
-        }
 
         public static SafeRebusRequest[] GetRequests(int nRequests)
         {
@@ -32,16 +26,6 @@ namespace SafeRebus.MessageHandler.Host
                 requests.Add(new SafeRebusRequest());
             }
             return requests.ToArray();
-        }
-        
-        public static SafeRebusResponse[] GetResponses(int nResponses)
-        {
-            var responses = new List<SafeRebusResponse>();
-            for (var i = 0; i < nResponses; i++)
-            {
-                responses.Add(new SafeRebusResponse());
-            }
-            return responses.ToArray();
         }
 
         public static async Task RunUntilCancelled(Func<Task> func, CancellationToken cancellationToken)
@@ -54,15 +38,6 @@ namespace SafeRebus.MessageHandler.Host
         
         private static async Task AssertReceivedResponses(this IResponseRepository responseRepository, Guid[] responseIds)
         {
-            try
-            {
-                var savedResponses = (await responseRepository.SelectResponses(responseIds));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
             var savedResponseIds = (await responseRepository.SelectResponses(responseIds))
                 .Select(response => response.Id).ToArray();
             foreach (var responseId in responseIds)

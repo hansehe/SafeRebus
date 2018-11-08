@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -16,7 +17,7 @@ namespace SafeRebus.NServiceBus.Host
     {
         private Task MainTask;
         
-        private int ResponsesPerCycle => Configuration.GetHostRequestsPerCycle();
+        private int RequestsPerCycle => Configuration.GetHostRequestsPerCycle();
         private string OutputQueue => Configuration.GetRabbitMqOutputQueue();
         
         private readonly ILogger Logger;
@@ -52,18 +53,18 @@ namespace SafeRebus.NServiceBus.Host
 
         private Task Run(CancellationToken cancellationToken)
         {
-            Logger.LogInformation("Starting nServiceBus host job - sending responses, and expects to find them in the database.");
-            Logger.LogInformation($"Sending {ResponsesPerCycle} responses during each cycle.");
+            Logger.LogInformation("Starting nServiceBus host job - sending requests, and expects to find corresponding responses in the database.");
+            Logger.LogInformation($"Sending {RequestsPerCycle} requests during each cycle.");
             return SafeRebusHostHelper.RunUntilCancelled(async () =>
             {
-                var responses = SafeRebusHostHelper.GetResponses(ResponsesPerCycle);
-                foreach (var response in responses)
+                var requests = SafeRebusHostHelper.GetRequests(RequestsPerCycle);
+                foreach (var request in requests)
                 {
-                    await EndpointInstance.Send(OutputQueue, response);
+                    await EndpointInstance.Send(OutputQueue, request);
                 } 
                 await Tools.WaitUntilSuccess(
-                    () => ResponseRepository.AssertReceivedResponses(responses));
-                Logger.LogInformation("Successfully verified all sent responses!");
+                    () => ResponseRepository.AssertReceivedResponses(requests));
+                Logger.LogInformation("Successfully verified all sent requests!");
             }, cancellationToken);
         }
     }

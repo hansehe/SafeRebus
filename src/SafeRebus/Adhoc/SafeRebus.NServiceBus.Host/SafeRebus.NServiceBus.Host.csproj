@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="NServiceBus.MSDependencyInjection" Version="0.1.3" />
       <PackageReference Include="NServiceBus.RabbitMQ" Version="5.0.1" />
     </ItemGroup>
 
@@ -12,6 +13,7 @@
       <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Builder\SafeRebus.MessageHandler.Builder.csproj" />
       <ProjectReference Include="..\..\Example\SafeRebus.MessageHandler.Contracts\SafeRebus.MessageHandler.Contracts.csproj" />
       <ProjectReference Include="..\..\Extensions\SafeRebus.Extensions.Builder\SafeRebus.Extensions.Builder.csproj" />
+      <ProjectReference Include="..\..\Standards\SafeStandard.Headers\SafeStandard.Headers.csproj" />
     </ItemGroup>
 
     <ItemGroup>

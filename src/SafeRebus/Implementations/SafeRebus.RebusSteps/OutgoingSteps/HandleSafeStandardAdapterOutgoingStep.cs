@@ -9,11 +9,11 @@ using SafeRebus.Config;
 
 namespace SafeRebus.RebusSteps.OutgoingSteps
 {
-    public class HandleNServiceBusAdapterOutgoingStep : IOutgoingStep
+    public class HandleSafeStandardAdapterOutgoingStep : IOutgoingStep
     {
         private readonly IServiceProvider ServiceProvider;
 
-        public HandleNServiceBusAdapterOutgoingStep(IServiceProvider serviceProvider)
+        public HandleSafeStandardAdapterOutgoingStep(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
         }
@@ -22,7 +22,7 @@ namespace SafeRebus.RebusSteps.OutgoingSteps
         {
             var transactionContext = context.Load<ITransactionContext>(SafeRebusContextTags.TransactionContextTag);
             var scope = transactionContext.GetOrAdd(SafeRebusContextTags.ScopeContextTag, () => ServiceProvider.CreateScope());
-            var adapter = scope.ServiceProvider.GetService<INServiceBusAdapter>();
+            var adapter = scope.ServiceProvider.GetService<ISafeStandardAdapter>();
             var transportMessage = context.Load<TransportMessage>();
             transportMessage = adapter.AppendAdapterSpecificHeaders(transportMessage);
             context.Save(transportMessage);

@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SafeRebus.Adapter.SafeStandard;
 using SafeRebus.Outbox.Migration;
 
 namespace SafeRebus.Extensions.Builder
@@ -17,7 +18,7 @@ namespace SafeRebus.Extensions.Builder
                 .ConfigureWith(Outbox.Database.ServiceRegistration.Register)
                 .ConfigureWith(Outbox.Cleaner.ServiceRegistration.Register)
                 .ConfigureWith(Adapter.Utilities.ServiceRegistration.Register)
-                .ConfigureWith(Adapter.NServiceBus.ServiceRegistration.Register);
+                .ConfigureWith(ServiceRegistration.Register);
         }
         
         public static IServiceCollection ConfigureWithSafeRebusMigration(this IServiceCollection serviceCollection, 

@@ -3,12 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
 using SafeRebus.Abstractions;
+using SafeRebus.Adapters.Abstractions;
 using SafeRebus.Config;
 using SafeRebus.Extensions.Builder;
 using SafeRebus.MessageHandler.Contracts.Requests;
 using SafeRebus.MessageHandler.Contracts.Responses;
 using SafeRebus.NServiceBus.Host.MessageHandlers;
-using SafeRebus.Utilities;
 
 namespace SafeRebus.NServiceBus.Host
 {
@@ -17,14 +17,15 @@ namespace SafeRebus.NServiceBus.Host
         public static IServiceCollection ConfigureWithNServiceBusHost(this IServiceCollection serviceCollection, Dictionary<string, string> overrideConfig = null)
         {
             return serviceCollection
-                .AddScoped<IHandleMessages<DummyRequest>, DummyRequestMessageHandler>()
-                .AddScoped<IHandleMessages<SafeRebusRequest>, SafeRebusRequestMessageHandler>()
-                .ConfigureWith(MessageHandler.Database.ServiceRegistration.Register)
                 .ConfigureWithSafeRebus()
-                .UseNServiceBus()
+                .ConfigureWith(MessageHandler.Database.ServiceRegistration.Register)
+                .AddScoped<IHandleMessages<DummyRequest>, NsDummyRequestMessageHandler>()
+                .AddScoped<IHandleMessages<SafeRebusRequest>, NsSafeRebusRequestMessageHandler>()
+                .AddScoped<IHandleMessages<SafeRebusResponse>, NsSafeRebusResponseMessageHandler>()
                 .AddHostedService<NServiceBusHost>()
                 .UseNServiceBusConfiguration(overrideConfig)
-                .UseDefaultLogging();
+                .UseDefaultLogging()
+                .UseNServiceBus();
         }
 
         private static IServiceCollection UseNServiceBus(this IServiceCollection serviceCollection)
@@ -36,6 +37,15 @@ namespace SafeRebus.NServiceBus.Host
                 rabbitMqUtility.CreateQueue(configuration.GetRabbitMqInputQueue());
                 
                 var endpointConfiguration = new EndpointConfiguration(configuration.GetRabbitMqInputQueue());
+                endpointConfiguration.UseContainer<ServicesBuilder>(customizations =>
+                {
+                    customizations.ExistingServices(serviceCollection);
+                });
+                
+                var incomingHeaderBehavior = new IncomingHeaderBehavior(provider.GetService<IBodyConverter>());
+                var outgoingHeaderBehavior = new OutgoingHeaderBehavior();
+                endpointConfiguration.Pipeline.Register(incomingHeaderBehavior, "Manipulates incoming headers");
+                endpointConfiguration.Pipeline.Register(outgoingHeaderBehavior, "Manipulates outgoing headers");
                 
                 endpointConfiguration.Conventions()
                     .DefiningMessagesAs(

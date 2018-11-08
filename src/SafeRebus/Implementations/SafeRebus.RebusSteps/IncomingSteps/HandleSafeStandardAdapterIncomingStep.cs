@@ -10,11 +10,11 @@ using SafeRebus.Config;
 
 namespace SafeRebus.RebusSteps.IncomingSteps
 {
-    public class HandleNServiceBusAdapterIncomingStep : IIncomingStep
+    public class HandleSafeStandardAdapterIncomingStep : IIncomingStep
     {
         private readonly IServiceProvider ServiceProvider;
 
-        public HandleNServiceBusAdapterIncomingStep(IServiceProvider serviceProvider)
+        public HandleSafeStandardAdapterIncomingStep(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
         }
@@ -23,7 +23,7 @@ namespace SafeRebus.RebusSteps.IncomingSteps
         {
             var transactionContext = context.Load<ITransactionContext>(SafeRebusContextTags.TransactionContextTag);
             var scope = transactionContext.GetOrAdd(SafeRebusContextTags.ScopeContextTag, () => ServiceProvider.CreateScope());
-            var adapter = scope.ServiceProvider.GetService<INServiceBusAdapter>();
+            var adapter = scope.ServiceProvider.GetService<ISafeStandardAdapter>();
             var transportMessage = context.Load<TransportMessage>();
             if (adapter.IsUsableOnIncoming(transportMessage))
             {

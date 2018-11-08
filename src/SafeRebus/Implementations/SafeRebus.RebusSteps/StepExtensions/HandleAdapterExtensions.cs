@@ -8,12 +8,12 @@ namespace SafeRebus.RebusSteps.StepExtensions
 {
     public static class HandleAdapterExtensions
     {
-        public static OptionsConfigurer HandleMessageWithNServiceBusAdapter(this OptionsConfigurer configurer, IServiceProvider serviceProvider)
+        public static OptionsConfigurer HandleMessageWithSafeStandardAdapter(this OptionsConfigurer configurer, IServiceProvider serviceProvider)
         {
             return configurer
-                .RegisterIncomingStep(new HandleNServiceBusAdapterIncomingStep(serviceProvider),
+                .RegisterIncomingStep(new HandleSafeStandardAdapterIncomingStep(serviceProvider),
                     anchorStep: typeof(DeserializeIncomingMessageStep))
-                .RegisterOutgoingStep(new HandleNServiceBusAdapterOutgoingStep(serviceProvider));
+                .RegisterOutgoingStep(new HandleSafeStandardAdapterOutgoingStep(serviceProvider));
         }
     }
 }

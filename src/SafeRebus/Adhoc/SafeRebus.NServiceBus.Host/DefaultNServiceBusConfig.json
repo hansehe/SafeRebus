@@ -2,5 +2,8 @@
   "rabbitMq": {
     "inputQueue": "NServiceBus.InputQueue",
     "outputQueue": "SafeRebus.InputQueue"
+  },
+  "messageHandlerHost": {
+    "requestsPerCycle": 2
   }
 }

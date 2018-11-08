@@ -10,7 +10,7 @@ namespace SafeRebus.RebusSteps
         {
             // The steps are executed in the order they are registered.
             return configurer
-                .HandleMessageWithNServiceBusAdapter(serviceProvider)
+                .HandleMessageWithSafeStandardAdapter(serviceProvider)
                 .HandleMessageInOutboxTransaction()
                 .HandleMessageInDatabaseTransaction()
                 .HandleMessageWithOutboxDuplicationFilter();
